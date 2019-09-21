@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signing.System.Tcc.Domain",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signing.System.Tcc.Identity", "Signing.System.Tcc.Identity\Signing.System.Tcc.Identity.csproj", "{C1350A7F-9343-461A-ACBA-3A24473B3369}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signin.System.Tcc.Ethereum", "Signin.System.Tcc.Ethereum\Signin.System.Tcc.Ethereum.csproj", "{2544E502-CC38-4BCB-A886-BABA64B5A29D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{C1350A7F-9343-461A-ACBA-3A24473B3369}.Release|x64.Build.0 = Release|Any CPU
 		{C1350A7F-9343-461A-ACBA-3A24473B3369}.Release|x86.ActiveCfg = Release|Any CPU
 		{C1350A7F-9343-461A-ACBA-3A24473B3369}.Release|x86.Build.0 = Release|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Debug|x64.Build.0 = Debug|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Debug|x86.Build.0 = Debug|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Release|x64.ActiveCfg = Release|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Release|x64.Build.0 = Release|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Release|x86.ActiveCfg = Release|Any CPU
+		{2544E502-CC38-4BCB-A886-BABA64B5A29D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

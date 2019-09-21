@@ -35,7 +35,7 @@ namespace Signing.System.Tcc.MVC
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
+                var q =Environment.GetEnvironmentVariable("CONN_STRING");
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     Environment.GetEnvironmentVariable("CONN_STRING")));

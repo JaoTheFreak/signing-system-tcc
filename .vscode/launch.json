@@ -19,7 +19,7 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "CONN_STRING": "host=127.0.0.1;database=dbteste;username=my_user;password=my_pw"
+                "CONN_STRING": "Server=127.0.0.1;Port=5432;Database=signingsystem;User Id=dev;Password=dev@123;"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
