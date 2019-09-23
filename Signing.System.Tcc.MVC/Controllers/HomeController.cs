@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Signin.System.Tcc.Ethereum.Wallet;
 using Signing.System.Tcc.MVC.Models;
 
 namespace Signing.System.Tcc.MVC.Controllers
@@ -13,10 +12,6 @@ namespace Signing.System.Tcc.MVC.Controllers
     {
         public IActionResult Index()
         {
-            var q = new WalletService();
-
-            var qq = q.GetWallet();
-            
             return View();
         }
 

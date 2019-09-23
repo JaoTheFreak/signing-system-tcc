@@ -3,9 +3,9 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [
+    "configurations": [    
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Web MVC Debug",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -19,7 +19,7 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "CONN_STRING": "Server=127.0.0.1;Port=5432;Database=signingsystem;User Id=dev;Password=dev@123;"
+                "CONNECTION_STRING_DB": "Server=127.0.0.1;Port=5432;Database=signingsystem;User Id=dev;Password=dev@123;"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
