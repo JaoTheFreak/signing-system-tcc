@@ -20,7 +20,12 @@ namespace Signing.System.Tcc.MVC.Controllers
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]        
         public IActionResult Login([FromForm] LoginViewModel inputLogin, string returnUrl)
         {
-            return null;
+            if (ModelState.IsValid)
+            {
+
+            }
+
+            return View();
         }
 
         public IActionResult Logout()
@@ -28,7 +33,7 @@ namespace Signing.System.Tcc.MVC.Controllers
             return null;
         }
 
-        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        [HttpGet, AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -37,7 +42,12 @@ namespace Signing.System.Tcc.MVC.Controllers
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public IActionResult Register([FromForm] RegisterViewModel inputRegister)
         {
-            return null;
+            if (ModelState.IsValid)
+            {
+
+            }
+
+            return View();
         }
 
         // GET: Account
