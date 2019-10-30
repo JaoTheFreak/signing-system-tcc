@@ -22,4 +22,11 @@
     <Folder Include="wwwroot\old\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
