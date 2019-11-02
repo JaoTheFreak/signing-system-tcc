@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Signing.System.Tcc.Application.Interfaces
 {
-    public interface IAppSerivce<T> where T : class
+    public interface IAppService<T> where T : class
     {
         T Get(int id);
         IEnumerable<T> GetAll();

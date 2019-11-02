@@ -1,16 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Signing.System.Tcc.Application.Interfaces;
+using Signing.System.Tcc.Domain.UserAggregate;
 using Signing.System.Tcc.MVC.ViewModels.Account;
+using System;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IUserAppService _userAppService;
+
+        private readonly IUnitOfWorkAppService _unitOfWorkAppService;
+
+
+        public AccountController(IUserAppService userAppService, IUnitOfWorkAppService unitOfWorkAppService)
+        {
+            _userAppService = userAppService;
+
+            _unitOfWorkAppService = unitOfWorkAppService;
+        }
+
         [HttpGet, AllowAnonymous]        
         public IActionResult Login(string returnUrl)
         {
@@ -22,6 +33,24 @@ namespace Signing.System.Tcc.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = _userAppService.FirstOrDefault(u => u.Email == inputLogin.UserName);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("Usuario Inexistente", "Dados de Login Incorretos.");
+
+                    return View();
+                }
+
+                var passwordToCheck = $"{inputLogin.Password}{user.Salt}";
+
+                if(user.PasswordHash != Helpers.Helpers.GenerateHashSHA256(passwordToCheck))
+                {
+                    ModelState.AddModelError("Usuario Inexistente", "Dados de Login Incorretos.");
+
+                    return View();
+                }
+                
 
             }
 
@@ -40,11 +69,32 @@ namespace Signing.System.Tcc.MVC.Controllers
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public IActionResult Register([FromForm] RegisterViewModel inputRegister)
+        public IActionResult Register([FromForm] RegisterViewModel inputRegister, [FromServices] IUserFactory userFactory)
         {
             if (ModelState.IsValid)
             {
+                var user = _userAppService.FirstOrDefault(u => u.Email == inputRegister.Email);
 
+                if (user != null)
+                {
+                    ModelState.AddModelError("Usuario Existente", "Já existe um usuário com o e-mail cadastrado!");
+
+                    return View();
+                }
+
+                var newPassword = Helpers.Helpers.GenerateHashSHA256($"{inputRegister.Password}{inputRegister.Salt}");
+
+                var newUser = userFactory.Create(inputRegister.Email, newPassword, inputRegister.Salt, inputRegister.FirstName, inputRegister.LastName);
+
+                _userAppService.Add(newUser);
+
+                var deuBoa = _unitOfWorkAppService.Complete();
+
+                if (deuBoa == 1)
+                    return View();
+
+                ModelState.AddModelError("Erro ao Criar Usuário", "Ocorreu um erro ao criar o usuário.");
+                return View();
             }
 
             return View();

@@ -3234,6 +3234,12 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\Signing.System.Tcc.DependencyConfiguration\Signing.System.Tcc.DependencyConfiguration.csproj" />
+    <ProjectReference Include="..\Signing.System.Tcc.Helpers\Signing.System.Tcc.Helpers.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <None Update="Dockerfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Signing.System.Tcc.DependencyConfiguration;
 
 namespace Signing.System.Tcc.MVC
 {
@@ -20,6 +22,9 @@ namespace Signing.System.Tcc.MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Dependency Injection Configuration
+            services.AddDepencyInjectionSigningSystem();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -36,6 +41,15 @@ namespace Signing.System.Tcc.MVC
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (var context = scope.ServiceProvider.GetService<DbContext>())
+                {
+                    context.Database.Migrate();
+                    context.Database.ExecuteSqlCommand("create extension if not exists unaccent;");
+                }
+            }
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

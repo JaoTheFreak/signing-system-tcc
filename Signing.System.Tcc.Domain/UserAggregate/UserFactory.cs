@@ -1,8 +1,8 @@
 ﻿namespace Signing.System.Tcc.Domain.UserAggregate
 {
-    public class UserFactory
+    public class UserFactory : IUserFactory
     {
-        public IUser Create(string email, string passwordHash, string salt, string firstName, string lastName)
+        public User Create(string email, string passwordHash, string salt, string firstName, string lastName)
         {
             return new User(email, passwordHash, salt, firstName, lastName);
         }
