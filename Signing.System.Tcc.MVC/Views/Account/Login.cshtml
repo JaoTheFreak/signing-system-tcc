@@ -1,34 +1,122 @@
 ﻿@model Signing.System.Tcc.MVC.ViewModels.Account.LoginViewModel
 
-@{
-    ViewData["Title"] = "Login";
+@{    
+    Layout = null;
 }
 
-<h1>Login</h1>
+<!DOCTYPE html>
+<html>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form  asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]"  method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signing System</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+    </environment>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css" asp-append-version="true">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css" asp-append-version="true">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/css/adminlte.min.css" asp-append-version="true">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+
+<body class="login-page" data-gr-c-s-loaded="true" style="min-height: 512.391px;">
+    <div class="login-box">
+        <div class="login-logo">
+            <b>Signing</b> System
+        </div>
+
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Insira suas informações para Iniciar</p>
+
+                <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <div class="input-group mb-3">
+                        <input asp-for="UserName" class="form-control" placeholder="Usuário" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input asp-for="Password" class="form-control" type="password" placeholder="Senha" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="remember">
+                                <label for="remember">
+                                    Remember Me
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                        </div>
+                    </div>
+                </form>
+
+                <p class="mb-1">
+                    <a asp-controller="Account" asp-action="Forgot">Esqueci minha senha</a>
+                </p>
+                <p class="mb-0">
+                    <a asp-controller="Account" asp-action="Register">Novo Usuário</a>
+                </p>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" type="password"/>
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Entrar" class="btn btn-primary" />
-                <a role="button" class="btn btn-dark" asp-controller="Account" asp-action="Register">Registrar</a>
-            </div>
-        </form>
+            <!-- /.login-card-body -->
+        </div>
     </div>
-</div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @*<div class="row">
+            <div class="col-md-4">
+                <form  asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]"  method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="UserName" class="control-label"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" type="password"/>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Entrar" class="btn btn-primary" />
+                        <a role="button" class="btn btn-dark" asp-controller="Account" asp-action="Register">Registrar</a>
+                    </div>
+                </form>
+            </div>
+        </div>*@
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</body>
+
+</html>
