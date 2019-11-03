@@ -1,50 +1,172 @@
 ﻿@model Signing.System.Tcc.MVC.ViewModels.Account.RegisterViewModel
+@await Component.InvokeAsync("NToastNotify")
 
-@{
-    ViewData["Title"] = "Register";
-}
 
-<h1>Register</h1>
+<!DOCTYPE html>
+<html>
 
-<h4>RegisterViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Register">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novo Usuário - Signing System</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+    </environment>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css" asp-append-version="true">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css" asp-append-version="true">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/css/adminlte.min.css" asp-append-version="true">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body class="register-page" data-gr-c-s-loaded="true" style="min-height: 586.391px;">
+    <div class="register-box">
+        <div class="register-logo">
+            <b>Novo</b> Usuário
+        </div>
+
+        <div class="card">
+            <div class="card-body register-card-body">
+                <p class="login-box-msg">Registre um novo usuário</p>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="input-group mb-3">
+                        <input asp-for="FirstName" class="form-control" placeholder="Nome" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                        <br>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input asp-for="LastName" class="form-control" placeholder="Sobrenome" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input asp-for="Email" class="form-control" placeholder="E-mail" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input asp-for="Password" class="form-control" placeholder="Senha" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input asp-for="CheckPassword" class="form-control" placeholder="Confirmação de Senha" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="CheckPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <!-- /.col -->
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block btn-info">Registrar</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+                <a class="text-center" asp-action="Login">Já possuo cadastro</a>
             </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CheckPassword" class="control-label"></label>
-                <input asp-for="CheckPassword" class="form-control" />
-                <span asp-validation-for="CheckPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a role="button" class="btn btn-dark" asp-action="Login">Login</a>
-            </div>
-        </form>
+            <!-- /.form-box -->
+        </div><!-- /.card -->
     </div>
-</div>
+    <!-- /.register-box -->
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/js/adminlte.min.js"></script>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @*<div class="row">
+            <div class="col-md-4">
+                <form asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="control-label"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName" class="control-label"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CheckPassword" class="control-label"></label>
+                        <input asp-for="CheckPassword" class="form-control" />
+                        <span asp-validation-for="CheckPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <a role="button" class="btn btn-dark" asp-action="Login">Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>*@
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    <!-- BEGIN TOASTR AUX FIELDS -->
+    <input type="hidden" id="success" value="@TempData["success"]" />
+    <input type="hidden" id="info" value="@TempData["info"]" />
+    <input type="hidden" id="warning" value="@TempData["warning"]" />
+    <input type="hidden" id="error" value="@TempData["error"]" />
+    <!-- END TOASTR AUX FIELDS -->
+</body>
+
+</html>

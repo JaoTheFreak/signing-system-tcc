@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Services\" />
+    <ProjectReference Include="..\Signing.System.Tcc.Helpers\Signing.System.Tcc.Helpers.csproj" />
   </ItemGroup>
 
 </Project>
