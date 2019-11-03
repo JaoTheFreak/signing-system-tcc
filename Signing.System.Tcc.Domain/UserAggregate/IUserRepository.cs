@@ -1,8 +1,8 @@
-﻿using Signing.System.Tcc.Domain.Interfaces.Repositories;
+﻿using Signing.System.Tcc.Domain.Repository;
 
 namespace Signing.System.Tcc.Domain.UserAggregate
 {
-    public interface IUserRepository : IRepository<IUser>
+    public interface IUserRepository : IRepository<User>
     {
 
     }

@@ -2,7 +2,7 @@ using System;
 
 namespace Signing.System.Tcc.Domain.UserAggregate
 {
-    public class User : IUser
+    public class User
     {
         public User(string email, string passwordHash, string salt, string firstName, string lastName)
         {

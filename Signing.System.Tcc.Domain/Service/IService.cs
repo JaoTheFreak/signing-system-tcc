@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Signing.System.Tcc.Domain.Interfaces.Repositories
+namespace Signing.System.Tcc.Domain.Service
 {
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IService<TEntity> where TEntity : class
     {
         TEntity Get(int id);
         IEnumerable<TEntity> GetAll();

@@ -1624,6 +1624,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.12" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NToastNotify" Version="5.0.10" />
   </ItemGroup>
 
 
@@ -3238,6 +3239,12 @@
     <None Include="wwwroot\plugins\toastr\toastr.js.map" />
     <None Include="wwwroot\plugins\toastr\toastr.min.css" />
     <None Include="wwwroot\plugins\toastr\toastr.min.js" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Signing.System.Tcc.DependencyConfiguration\Signing.System.Tcc.DependencyConfiguration.csproj" />
+    <ProjectReference Include="..\Signing.System.Tcc.Helpers\Signing.System.Tcc.Helpers.csproj" />
   </ItemGroup>
 
 

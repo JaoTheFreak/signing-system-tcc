@@ -1,16 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
+using Signing.System.Tcc.Application.Interfaces;
+using Signing.System.Tcc.Domain.UserAggregate;
 using Signing.System.Tcc.MVC.ViewModels.Account;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IUserAppService _userAppService;
+
+        private readonly IUnitOfWorkAppService _unitOfWorkAppService;
+
+        private readonly IToastNotification _notificationService;
+
+        public AccountController(IUserAppService userAppService, IUnitOfWorkAppService unitOfWorkAppService, IToastNotification toastNotification)
+        {
+            _userAppService = userAppService;
+
+            _unitOfWorkAppService = unitOfWorkAppService;
+
+            _notificationService = toastNotification;
+        }
+
         [HttpGet, AllowAnonymous]        
         public IActionResult Login(string returnUrl)
         {
@@ -22,7 +36,34 @@ namespace Signing.System.Tcc.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = _userAppService.FirstOrDefault(u => u.Email == inputLogin.UserName);
 
+                if (user == null)
+                {                    
+                    _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
+                    {
+                        CloseButton = true,
+                        Title = "Usuário Não Encontrado"
+                    });
+
+                    return View();
+                }
+
+                var passwordToCheck = $"{inputLogin.Password}{user.Salt}";
+
+                if(user.PasswordHash != Helpers.Helpers.GenerateHashSHA256(passwordToCheck))
+                {
+                    _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
+                    {
+                        CloseButton = true,
+                        Title = "Usuário Não Encontrado"
+                    });
+
+                    return View();
+                }
+                
+                //LOGAR USUARIO
+                
             }
 
             return View();
@@ -40,11 +81,39 @@ namespace Signing.System.Tcc.MVC.Controllers
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public IActionResult Register([FromForm] RegisterViewModel inputRegister)
+        public IActionResult Register([FromForm] RegisterViewModel inputRegister, [FromServices] IUserFactory userFactory)
         {
             if (ModelState.IsValid)
             {
+                var user = _userAppService.FirstOrDefault(u => u.Email == inputRegister.Email);
 
+                if (user != null)
+                {
+                    _notificationService.AddErrorToastMessage("Já existe um usuário com o e-mail cadastrado!", new ToastrOptions
+                    {
+                        CloseButton = true,
+                        Title = "Usuario Existente"
+                    });
+
+                    return View();
+                }
+
+                var newPassword = Helpers.Helpers.GenerateHashSHA256($"{inputRegister.Password}{inputRegister.Salt}");
+
+                var newUser = userFactory.Create(inputRegister.Email, newPassword, inputRegister.Salt, inputRegister.FirstName, inputRegister.LastName);
+
+                _userAppService.Add(newUser);
+
+                if (_unitOfWorkAppService.Complete() == 1)
+                    return RedirectToAction("Login");
+
+                _notificationService.AddErrorToastMessage("Ocorreu um erro ao criar o usuário.", new ToastrOptions
+                {
+                    CloseButton = true,
+                    Title = "Erro ao Criar Usuário"
+                });
+
+                return View();
             }
 
             return View();
