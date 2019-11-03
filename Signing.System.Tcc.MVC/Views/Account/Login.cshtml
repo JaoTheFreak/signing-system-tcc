@@ -1,6 +1,7 @@
 ﻿@model Signing.System.Tcc.MVC.ViewModels.Account.LoginViewModel
+@await Component.InvokeAsync("NToastNotify")
 
-@{    
+@{
     Layout = null;
 }
 
@@ -10,7 +11,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Signing System</title>
+    <title>Login - Signing System</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -22,7 +23,7 @@
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
-
+    <script src="~/lib/jquery/dist/jquery.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css" asp-append-version="true">
     <!-- Ionicons -->
@@ -35,6 +36,7 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 
+
 <body class="login-page" data-gr-c-s-loaded="true" style="min-height: 512.391px;">
     <div class="login-box">
         <div class="login-logo">
@@ -45,7 +47,8 @@
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Insira suas informações para Iniciar</p>
 
-                <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="input-group mb-3">
                         <input asp-for="UserName" class="form-control" placeholder="Usuário" />
                         <div class="input-group-append">
@@ -117,6 +120,13 @@
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     }
+        
+    <!-- BEGIN TOASTR AUX FIELDS -->
+    <input type="hidden" id="success" value="@TempData["success"]" />
+    <input type="hidden" id="info" value="@TempData["info"]" />
+    <input type="hidden" id="warning" value="@TempData["warning"]" />
+    <input type="hidden" id="error" value="@TempData["error"]" />
+    <!-- END TOASTR AUX FIELDS -->
 </body>
 
 </html>

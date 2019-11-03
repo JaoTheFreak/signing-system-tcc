@@ -6,6 +6,11 @@ namespace Signing.System.Tcc.MVC.ViewModels.Account
 {
     public class RegisterViewModel
     {
+        public RegisterViewModel()
+        {
+            Salt = Helpers.Helpers.GenerateHashSHA256($"{Guid.NewGuid().ToString()}{DateTime.Now.ToString()}");
+        } 
+
         [Required(ErrorMessage = "O campo {0} é obrigatório!", AllowEmptyStrings = false)]
         [DisplayName("Nome")]
         [StringLength(100, MinimumLength = 4, ErrorMessage = "O campo {0} precisa ter no mínimo {2} e no máximo {1} caracteres.")]
@@ -52,9 +57,10 @@ namespace Signing.System.Tcc.MVC.ViewModels.Account
             }
         }
 
-        public string Salt => Helpers.Helpers.GenerateHashSHA256($"{Guid.NewGuid().ToString()}{DateTime.Now.ToString()}");
+        public string Salt { get; }
 
         private string _realPassword;
+
         private string _realCheckPassword;
     }
 }

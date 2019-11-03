@@ -41,6 +41,9 @@ namespace Signing.System.Tcc.Helpers
 
         public static string GenerateHashSHA256(string inputData)
         {
+            if (string.IsNullOrEmpty(inputData))
+                return string.Empty;
+
             // Create a SHA256   
             using (var sha256Hash = SHA256.Create())
             {

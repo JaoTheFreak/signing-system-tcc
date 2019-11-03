@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using Signing.System.Tcc.Application.Interfaces;
 using Signing.System.Tcc.Domain.UserAggregate;
 using Signing.System.Tcc.MVC.ViewModels.Account;
-using System;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
@@ -14,12 +14,15 @@ namespace Signing.System.Tcc.MVC.Controllers
 
         private readonly IUnitOfWorkAppService _unitOfWorkAppService;
 
+        private readonly IToastNotification _notificationService;
 
-        public AccountController(IUserAppService userAppService, IUnitOfWorkAppService unitOfWorkAppService)
+        public AccountController(IUserAppService userAppService, IUnitOfWorkAppService unitOfWorkAppService, IToastNotification toastNotification)
         {
             _userAppService = userAppService;
 
             _unitOfWorkAppService = unitOfWorkAppService;
+
+            _notificationService = toastNotification;
         }
 
         [HttpGet, AllowAnonymous]        
@@ -36,8 +39,12 @@ namespace Signing.System.Tcc.MVC.Controllers
                 var user = _userAppService.FirstOrDefault(u => u.Email == inputLogin.UserName);
 
                 if (user == null)
-                {
-                    ModelState.AddModelError("Usuario Inexistente", "Dados de Login Incorretos.");
+                {                    
+                    _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
+                    {
+                        CloseButton = true,
+                        Title = "Usuário Não Encontrado"
+                    });
 
                     return View();
                 }
@@ -46,12 +53,17 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                 if(user.PasswordHash != Helpers.Helpers.GenerateHashSHA256(passwordToCheck))
                 {
-                    ModelState.AddModelError("Usuario Inexistente", "Dados de Login Incorretos.");
+                    _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
+                    {
+                        CloseButton = true,
+                        Title = "Usuário Não Encontrado"
+                    });
 
                     return View();
                 }
                 
-
+                //LOGAR USUARIO
+                
             }
 
             return View();
@@ -77,7 +89,11 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                 if (user != null)
                 {
-                    ModelState.AddModelError("Usuario Existente", "Já existe um usuário com o e-mail cadastrado!");
+                    _notificationService.AddErrorToastMessage("Já existe um usuário com o e-mail cadastrado!", new ToastrOptions
+                    {
+                        CloseButton = true,
+                        Title = "Usuario Existente"
+                    });
 
                     return View();
                 }
@@ -88,12 +104,15 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                 _userAppService.Add(newUser);
 
-                var deuBoa = _unitOfWorkAppService.Complete();
+                if (_unitOfWorkAppService.Complete() == 1)
+                    return RedirectToAction("Login");
 
-                if (deuBoa == 1)
-                    return View();
+                _notificationService.AddErrorToastMessage("Ocorreu um erro ao criar o usuário.", new ToastrOptions
+                {
+                    CloseButton = true,
+                    Title = "Erro ao Criar Usuário"
+                });
 
-                ModelState.AddModelError("Erro ao Criar Usuário", "Ocorreu um erro ao criar o usuário.");
                 return View();
             }
 

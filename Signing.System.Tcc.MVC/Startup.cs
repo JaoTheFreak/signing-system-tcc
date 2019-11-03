@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Signing.System.Tcc.DependencyConfiguration;
+using NToastNotify;
 
 namespace Signing.System.Tcc.MVC
 {
@@ -35,7 +36,23 @@ namespace Signing.System.Tcc.MVC
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.AddMvc(options =>
+            //{
+            //    var policyAuthAllControllers = new AuthorizationPolicyBuilder()
+            //        .RequireAuthenticatedUser()
+            //        .Build();
+
+            //    options.Filters.Add(new AuthorizeFilter(policyAuthAllControllers));
+            //}).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddNToastNotifyToastr(new ToastrOptions
+                {
+                    ProgressBar = false,
+                    PositionClass = ToastPositions.TopCenter,
+                    TimeOut = 5000
+                }); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +66,7 @@ namespace Signing.System.Tcc.MVC
                     context.Database.ExecuteSqlCommand("create extension if not exists unaccent;");
                 }
             }
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -66,6 +83,8 @@ namespace Signing.System.Tcc.MVC
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseNToastNotify();
 
             app.UseMvc(routes =>
             {
