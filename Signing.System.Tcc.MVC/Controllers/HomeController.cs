@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Signing.System.Tcc.MVC.Models;
+using System.Diagnostics;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
@@ -16,7 +12,6 @@ namespace Signing.System.Tcc.MVC.Controllers
             return View();
         }
 
-        [Authorize]
         public IActionResult Privacy()
         {
             return View();
@@ -26,6 +21,12 @@ namespace Signing.System.Tcc.MVC.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public IActionResult DashBoard()
+        {
+            return View();
         }
     }
 }

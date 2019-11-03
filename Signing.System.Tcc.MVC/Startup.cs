@@ -8,6 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Signing.System.Tcc.DependencyConfiguration;
 using NToastNotify;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using System;
+using Signing.System.Tcc.MVC.Services;
+using Signing.System.Tcc.MVC.Interfaces;
 
 namespace Signing.System.Tcc.MVC
 {
@@ -26,6 +31,8 @@ namespace Signing.System.Tcc.MVC
             // Dependency Injection Configuration
             services.AddDepencyInjectionSigningSystem();
 
+            services.AddScoped<IAuthenticantionService, AuthService>();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -33,26 +40,43 @@ namespace Signing.System.Tcc.MVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
+            services.AddAuthentication(Helpers.Helpers.SigningSystemScheme)
+            .AddCookie(Helpers.Helpers.SigningSystemScheme);
 
-            //services.AddMvc(options =>
-            //{
-            //    var policyAuthAllControllers = new AuthorizationPolicyBuilder()
-            //        .RequireAuthenticatedUser()
-            //        .Build();
+            services.AddMvc(options =>
+            {
+                var policyAuthAllControllers = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
 
-            //    options.Filters.Add(new AuthorizeFilter(policyAuthAllControllers));
-            //}).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                options.Filters.Add(new AuthorizeFilter(policyAuthAllControllers));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .AddNToastNotifyToastr(new ToastrOptions
+            {
+                ProgressBar = false,
+                PositionClass = ToastPositions.TopCenter,
+                TimeOut = 5000
+            });
 
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddNToastNotifyToastr(new ToastrOptions
-                {
-                    ProgressBar = false,
-                    PositionClass = ToastPositions.TopCenter,
-                    TimeOut = 5000
-                }); 
+            services.ConfigureApplicationCookie(options =>
+            {                
+                options.Cookie.MaxAge = TimeSpan.FromMinutes(30);
+
+                options.AccessDeniedPath = "/Account/AccessDenied";
+
+                options.Cookie.Name = Helpers.Helpers.SigningSystemScheme;
+
+                options.Cookie.Expiration = TimeSpan.FromHours(2);
+
+                options.ExpireTimeSpan = TimeSpan.FromHours(2);
+
+                options.LoginPath = "/Account/Login";
+
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+
+                options.SlidingExpiration = true;                
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
