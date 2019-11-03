@@ -19,7 +19,7 @@ namespace Signing.System.Tcc.MVC.Controllers
         private readonly IToastNotification _notificationService;
 
         private readonly IAuthenticantionService _authorizationService;
-        
+
         public AccountController(IUserAppService userAppService, IUnitOfWorkAppService unitOfWorkAppService, IToastNotification toastNotification, IAuthenticantionService authorizationService)
         {
             _userAppService = userAppService;
@@ -31,7 +31,7 @@ namespace Signing.System.Tcc.MVC.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpGet, AllowAnonymous]        
+        [HttpGet, AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -45,7 +45,7 @@ namespace Signing.System.Tcc.MVC.Controllers
             return RedirectToAction("DashBoard", "Home");
         }
 
-        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]        
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([FromForm] LoginViewModel inputLogin, string returnUrl)
         {
             if (ModelState.IsValid)
@@ -69,7 +69,7 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                     return RedirectToAction("Dashboard", "Home");
                 }
-                
+
                 _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
                 {
                     CloseButton = true,
@@ -81,8 +81,8 @@ namespace Signing.System.Tcc.MVC.Controllers
 
             return View();
         }
-        
-        [HttpPost, ActionName("Logout"), ValidateAntiForgeryToken]        
+
+        [HttpPost, ActionName("Logout"), ValidateAntiForgeryToken]
         public async Task<IActionResult> LogoutPost()
         {
             if (User.Identity.IsAuthenticated)
@@ -149,20 +149,17 @@ namespace Signing.System.Tcc.MVC.Controllers
                     return RedirectToAction("Login");
                 }
 
-                    return RedirectToAction("Login");
-                }
-                    
-                _notificationService.AddErrorToastMessage("Ocorreu um erro ao criar o usuário.", new ToastrOptions
-                {
-                    CloseButton = true,
-                    Title = "Erro ao Criar Usuário"
-                });
-
-                return View();
+                return RedirectToAction("Login");
             }
 
+            _notificationService.AddErrorToastMessage("Ocorreu um erro ao criar o usuário.", new ToastrOptions
+            {
+                CloseButton = true,
+                Title = "Erro ao Criar Usuário"
+            });
+
             return View();
-        }
+        }    
 
         [HttpGet]
         public IActionResult AccessDenied()
