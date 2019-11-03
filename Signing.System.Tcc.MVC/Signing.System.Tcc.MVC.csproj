@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\img\NovaPasta\**" />
+    <Content Remove="wwwroot\img\NovaPasta\**" />
+    <EmbeddedResource Remove="wwwroot\img\NovaPasta\**" />
+    <None Remove="wwwroot\img\NovaPasta\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\css\adminlte.css" />
     <Content Remove="wwwroot\css\adminlte.css.map" />
     <Content Remove="wwwroot\css\adminlte.min.css" />
@@ -1623,6 +1630,7 @@
 
   <ItemGroup>
     <Folder Include="Factories\" />
+    <Folder Include="ViewModels\Account\NovaPasta\" />
   </ItemGroup>
 
 

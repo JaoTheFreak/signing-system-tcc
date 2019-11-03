@@ -140,11 +140,14 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                 if (_unitOfWorkAppService.Complete() == 1)
                 {
-                    _notificationService.AddErrorToastMessage($"Usuário {inputRegister.Email} cadastrado com sucesso!", new ToastrOptions
+                    _notificationService.AddErrorToastMessage($"Usuário {inputRegister.Email} registrado com sucesso!", new ToastrOptions
                     {
                         CloseButton = true,
-                        Title = "Novo Usuário"
+                        Title = "Novo Usuário Registrado"
                     });
+
+                    return RedirectToAction("Login");
+                }
 
                     return RedirectToAction("Login");
                 }

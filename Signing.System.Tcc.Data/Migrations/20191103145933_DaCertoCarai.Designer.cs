@@ -10,8 +10,8 @@ using Signing.System.Tcc.Data.Context;
 namespace Signing.System.Tcc.Data.Migrations
 {
     [DbContext(typeof(SigningContext))]
-    [Migration("20190929234625_Hello")]
-    partial class Hello
+    [Migration("20191103145933_DaCertoCarai")]
+    partial class DaCertoCarai
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,14 +19,19 @@ namespace Signing.System.Tcc.Data.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
+                .HasAnnotation("Relational:Sequence:.User", "'User', '', '12', '1', '', '', 'Int32', 'False'");
 
             modelBuilder.Entity("Signing.System.Tcc.Domain.UserAggregate.User", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("nextval('\"User\"')")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("CreatedAt");
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Email");
 
