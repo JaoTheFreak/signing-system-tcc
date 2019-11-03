@@ -1,8 +1,132 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Signing System</title>
+
+        <environment include="Development">
+            <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        </environment>
+        <environment exclude="Development">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                  asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+                  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+                  crossorigin="anonymous"
+                  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+        </environment>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css" asp-append-version="true">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <!-- icheck bootstrap -->
+        <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css" asp-append-version="true">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="~/css/adminlte.min.css" asp-append-version="true">
+        <!-- Google Font: Source Sans Pro -->
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+        <style>
+        </style>
+    </head>
+
+    <body>
+        <nav>
+
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <img src="/img/home/home-blockchain-icon.png" width="40%"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <h1 class="display-4">Registro de Autoria em Blockchain</h1>
+                </div>
+
+                <div>
+                    <hr />
+                </div>
+            </div>
+
+            <div id="validar-imagem" class="pt-xl-5 border card p-5 ">
+                <div id="validar-imagem-options">
+                    <div class="text-center font-weight-bold callout callout-info">
+                        Valide a autoria de uma imagem informando o hash obtido na transação ou faça o upload da imagem original registrada na blockchain
+                    </div>
+                    <div class="row justify-content-md-center pt-xl-5">
+                        <div class="col-sm-4 input-group">
+                            <input type="text" class="form-control rounded-0" placeholder="a4e4h4g5fg8aDFa445d44d" id="hashField">
+                            <span class="input-group-append">
+                                <button id="submit-hash" type="button" class="btn btn-info btn-flat">Validar</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row justify-content-md-center pt-xl-5">
+                        <div class="col-sm-4">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Selecione uma imagem</label>
+                                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                </div>
+                            </form>
+                            <button id="validar-img" type="button" class="btn btn-block btn-info btn-lg">Enviar imagem</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay" id="scroll-validate">
+                    <i class="fas fa-2x fa-sync fa-spin"></i>
+                </div>
+            </div>
+                <div class="row pt-xl-5">
+                    <div class="col">
+                        <p class="text-center">Leia mais sobre <a href="https://docs.microsoft.com/aspnet/core">registro de imagens digitais em blockchain</a>.</p>
+                    </div>
+                </div>
+        </div>
+</body>
+<script>
+
+    $(document).ready(function () {
+
+        $('#scroll-validate').hide();
+
+        $("#submit-hash").click(function () {
+
+            var hashData = $('#hashField').val();
+
+            var url = "@Url.Action("Validate", "Document")";
+
+            $.ajax({
+                method: "GET",
+                url: url,
+                data: {
+                    imageHashToValidate: hashData
+                },
+                beforeSend: function () {
+                    $('#scroll-validate').show();
+                }
+            })
+                .done(function (data) {
+                    $(".overlay").hide();
+
+                    console.log(data);
+
+                    $("#validar-imagem").html(data);
+                })
+                .fail(function (jqXHR, textStatus, data) {
+                    alert(data);
+                    $('#scroll-validate').hide();
+                    $('#hashField').val("");
+                });
+                         
+        });
+    });
+
+</script>

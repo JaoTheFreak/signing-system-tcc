@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\img\NovaPasta\**" />
+    <Content Remove="wwwroot\img\NovaPasta\**" />
+    <EmbeddedResource Remove="wwwroot\img\NovaPasta\**" />
+    <None Remove="wwwroot\img\NovaPasta\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\css\adminlte.css" />
     <Content Remove="wwwroot\css\adminlte.css.map" />
     <Content Remove="wwwroot\css\adminlte.min.css" />
@@ -1615,13 +1622,14 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.12" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
 
   <ItemGroup>
     <Folder Include="Factories\" />
+    <Folder Include="ViewModels\Account\NovaPasta\" />
   </ItemGroup>
 
 
