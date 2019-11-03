@@ -43,7 +43,7 @@ namespace Signing.System.Tcc.MVC.Controllers
                     _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
                     {
                         CloseButton = true,
-                        Title = "Usuário Não Encontrado"
+                        Title = "Usuário Não Encontrado"                        
                     });
 
                     return View();
@@ -105,7 +105,15 @@ namespace Signing.System.Tcc.MVC.Controllers
                 _userAppService.Add(newUser);
 
                 if (_unitOfWorkAppService.Complete() == 1)
+                {
+                    _notificationService.AddErrorToastMessage($"Usuário {inputRegister.Email} registrado com sucesso!", new ToastrOptions
+                    {
+                        CloseButton = true,
+                        Title = "Novo Usuário Registrado"
+                    });
+
                     return RedirectToAction("Login");
+                }
 
                 _notificationService.AddErrorToastMessage("Ocorreu um erro ao criar o usuário.", new ToastrOptions
                 {

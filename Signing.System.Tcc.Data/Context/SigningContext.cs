@@ -5,6 +5,7 @@ using System.Linq;
 using Signing.System.Tcc.Helpers;
 using System.Threading.Tasks;
 using System.Threading;
+using Signing.System.Tcc.Data.EntityConfig;
 
 namespace Signing.System.Tcc.Data.Context
 {
@@ -25,7 +26,7 @@ namespace Signing.System.Tcc.Data.Context
         {
             modelBuilder.RemovePluralizingTableNameConvention();
 
-            modelBuilder.ForNpgsqlUseIdentityColumns();
+            //modelBuilder.ForNpgsqlUseIdentityColumns();
 
             // Setting decimal precision
             foreach (var property in modelBuilder.Model.GetEntityTypes()
@@ -41,7 +42,7 @@ namespace Signing.System.Tcc.Data.Context
             }
 
             #region Applying Entity Config
-
+            modelBuilder.ApplyConfiguration(new UserEntityConfig());
             #endregion
 
             #region Corretions in Auto Increment Ids

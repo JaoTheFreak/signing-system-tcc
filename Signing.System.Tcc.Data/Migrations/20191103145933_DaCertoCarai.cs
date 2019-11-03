@@ -1,25 +1,27 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Signing.System.Tcc.Data.Migrations
 {
-    public partial class Hello : Migration
+    public partial class DaCertoCarai : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateSequence<int>(
+                name: "User",
+                startValue: 12L);
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<int>(nullable: false, defaultValueSql: "nextval('\"User\"')"),
                     PasswordHash = table.Column<string>(nullable: true),
                     Salt = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false, defaultValueSql: "NOW()"),
                     UpdatedAt = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
@@ -32,6 +34,9 @@ namespace Signing.System.Tcc.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropSequence(
+                name: "User");
         }
     }
 }

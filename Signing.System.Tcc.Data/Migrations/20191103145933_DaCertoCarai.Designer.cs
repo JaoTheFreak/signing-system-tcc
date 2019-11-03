@@ -10,14 +10,14 @@ using Signing.System.Tcc.Data.Context;
 namespace Signing.System.Tcc.Data.Migrations
 {
     [DbContext(typeof(SigningContext))]
-    [Migration("20191103040620_Segunda")]
-    partial class Segunda
+    [Migration("20191103145933_DaCertoCarai")]
+    partial class DaCertoCarai
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("Relational:Sequence:.User", "'User', '', '12', '1', '', '', 'Int32', 'False'");
@@ -26,9 +26,12 @@ namespace Signing.System.Tcc.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("nextval('\"User\"')");
+                        .HasDefaultValueSql("nextval('\"User\"')")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("CreatedAt");
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Email");
 
@@ -44,7 +47,7 @@ namespace Signing.System.Tcc.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }
