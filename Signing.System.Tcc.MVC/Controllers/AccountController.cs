@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using Signing.System.Tcc.Application.Interfaces;
 using Signing.System.Tcc.Domain.UserAggregate;
+using Signing.System.Tcc.MVC.Interfaces;
 using Signing.System.Tcc.MVC.ViewModels.Account;
+using System.Threading.Tasks;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
@@ -16,62 +18,94 @@ namespace Signing.System.Tcc.MVC.Controllers
 
         private readonly IToastNotification _notificationService;
 
-        public AccountController(IUserAppService userAppService, IUnitOfWorkAppService unitOfWorkAppService, IToastNotification toastNotification)
+        private readonly IAuthenticantionService _authorizationService;
+        
+        public AccountController(IUserAppService userAppService, IUnitOfWorkAppService unitOfWorkAppService, IToastNotification toastNotification, IAuthenticantionService authorizationService)
         {
             _userAppService = userAppService;
 
             _unitOfWorkAppService = unitOfWorkAppService;
 
             _notificationService = toastNotification;
+
+            _authorizationService = authorizationService;
         }
 
         [HttpGet, AllowAnonymous]        
         public IActionResult Login(string returnUrl)
         {
-            return View();
+            ViewBag.ReturnUrl = returnUrl;
+
+            if (!User.Identity.IsAuthenticated)
+                return View();
+
+            if (Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("DashBoard", "Home");
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]        
-        public IActionResult Login([FromForm] LoginViewModel inputLogin, string returnUrl)
+        public async Task<IActionResult> Login([FromForm] LoginViewModel inputLogin, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-                var user = _userAppService.FirstOrDefault(u => u.Email == inputLogin.UserName);
+                var user = _userAppService.FirstOrDefault(u => u.Email == inputLogin.UserName && u.PasswordHash == Helpers.Helpers.GenerateHashSHA256($"{inputLogin.Password}{u.Salt}"));
 
-                if (user == null)
-                {                    
-                    _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
-                    {
-                        CloseButton = true,
-                        Title = "Usuário Não Encontrado"                        
-                    });
-
-                    return View();
-                }
-
-                var passwordToCheck = $"{inputLogin.Password}{user.Salt}";
-
-                if(user.PasswordHash != Helpers.Helpers.GenerateHashSHA256(passwordToCheck))
+                if (user != null)
                 {
-                    _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
+                    await _authorizationService.SignInAsync(user, HttpContext);
+
+                    _notificationService.AddSuccessToastMessage($"Bem Vindo {user.DisplayName}!", new ToastrOptions
                     {
-                        CloseButton = true,
-                        Title = "Usuário Não Encontrado"
+                        Title = "Login Efetuado",
+                        CloseButton = true
                     });
 
-                    return View();
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+
+                    return RedirectToAction("Dashboard", "Home");
                 }
                 
-                //LOGAR USUARIO
-                
+                _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
+                {
+                    CloseButton = true,
+                    Title = "Usuário Não Encontrado"
+                });
+
+                return View();
             }
 
             return View();
         }
+        
+        [HttpPost, ActionName("Logout"), ValidateAntiForgeryToken]        
+        public async Task<IActionResult> LogoutPost()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                await _authorizationService.SignOutAsync(HttpContext);
+            }
 
+            _notificationService.AddSuccessToastMessage($"Volte Sempre {User.Identity.Name}!", new ToastrOptions
+            {
+                CloseButton = true,
+                Title = "Até breve"
+            });
+
+            return RedirectToAction("Login");
+        }
+
+        [HttpGet]
         public IActionResult Logout()
         {
-            return null;
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Dashboard", "Home");
+
+            return RedirectToAction("Login");
         }
 
         [HttpGet, AllowAnonymous]
@@ -115,6 +149,9 @@ namespace Signing.System.Tcc.MVC.Controllers
                     return RedirectToAction("Login");
                 }
 
+                    return RedirectToAction("Login");
+                }
+                    
                 _notificationService.AddErrorToastMessage("Ocorreu um erro ao criar o usuário.", new ToastrOptions
                 {
                     CloseButton = true,
@@ -127,85 +164,10 @@ namespace Signing.System.Tcc.MVC.Controllers
             return View();
         }
 
-        // GET: Account
-        public ActionResult Index()
+        [HttpGet]
+        public IActionResult AccessDenied()
         {
             return View();
-        }
-
-        // GET: Account/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Account/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Account/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Account/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Account/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Account/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Account/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

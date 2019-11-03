@@ -17,8 +17,7 @@ namespace Signing.System.Tcc.Data.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("Relational:Sequence:.User", "'User', '', '12', '1', '', '', 'Int32', 'False'");
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Signing.System.Tcc.Domain.UserAggregate.User", b =>
                 {
@@ -26,6 +25,7 @@ namespace Signing.System.Tcc.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("nextval('\"User\"')")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
