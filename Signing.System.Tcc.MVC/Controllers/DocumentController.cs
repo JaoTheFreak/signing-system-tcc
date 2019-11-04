@@ -29,6 +29,27 @@ namespace Signing.System.Tcc.MVC.Controllers
             return Json(jsonToReturn);
         }
 
+        [HttpGet]
+        public IActionResult NewDocument()
+        {
+            return View();
+        }
 
+        [HttpPost, ActionName("Quote")]
+        public IActionResult Quote(Microsoft.AspNetCore.Http.IFormFile file)
+        {
+            var jsonToReturn = new
+            {
+                gasPrice = "1,00"
+            };
+
+            return Json(jsonToReturn);
+        }
+
+        [HttpPost, ActionName("NewDocument")]
+        public IActionResult NewDocumentPost()
+        {
+            return View();
+        }
     }
 }
