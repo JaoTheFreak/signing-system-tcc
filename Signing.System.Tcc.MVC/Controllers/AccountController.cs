@@ -162,9 +162,12 @@ namespace Signing.System.Tcc.MVC.Controllers
         }    
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult AccessDenied()
         {
-            return View();
+            _notificationService.AddErrorToastMessage("Não autorizado!", new ToastrOptions { Title = "Erro", CloseButton = true });
+
+            return RedirectToAction("DashBoard", "Home");
         }
     }
 }
