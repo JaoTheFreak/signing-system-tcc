@@ -44,10 +44,10 @@ contract SigningSystemContract {
         
         Author memory newAuthor = Author(authorDocument);
         
-        Image memory newImage = Image(imageHash, now, newAuthor.Document);
+        if(AuthorImages[authorDocument].length == 0)
+            Authors[totalAuthors++].push(newAuthor);
         
-        //VERIFICAR SE NAO VAI CRIAR VARIOS AUTORES COM O MESMO DOC
-        Authors[totalAuthors++].push(newAuthor);
+        Image memory newImage = Image(imageHash, now, newAuthor.Document);
         
         AuthorImages[authorDocument].push(newImage);
         
@@ -61,4 +61,9 @@ contract SigningSystemContract {
     function verifyImage(string memory imageHash) public view returns (string memory) {
         
     }
+    
+    function hue() public view returns (uint) {
+        return totalAuthors;
+    }
+    
 }
