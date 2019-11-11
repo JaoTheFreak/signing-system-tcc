@@ -1,0 +1,164 @@
+﻿@model Signing.System.Tcc.MVC.ViewModels.Document.DocumentViewModel
+
+@{
+    ViewData["Title"] = "NewDocument";
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signing System</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+    </environment>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css" asp-append-version="true">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css" asp-append-version="true">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/css/adminlte.min.css" asp-append-version="true">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <style>
+    </style>
+</head>
+
+<body>
+    <h1>Registrar nova imagem</h1>
+
+    <hr />
+    <div class="row">
+
+        <div class="col-md-5 card-body">
+            <form asp-action="NewDocument">
+                <div asp-validation-summary="ModelOnly" class="text-danger form-group"></div>
+
+                @*<div class="custom-file mb-3">
+                    <input asp-for="ImagePath" type="file" class="custom-file-input" id="exampleInputFile">
+                    <label asp-for="ImagePath" for="exampleInputFile" class="control-label custom-file-label">Selecione a imagem</label>
+                    <span asp-validation-for="AuthorImageName" class="text-danger"></span>
+                </div>*@
+                <div class="form-group">
+                    <label for="exampleFormControlFile1">Imagem</label>
+                    <input type="file" class="form-control-file" id="imagem">
+                </div>
+                <div class="form-group">
+                    <label asp-for="AuthorImageName" class="control-label"></label>
+                    <input asp-for="AuthorImageName" class="form-control" />
+                    <span asp-validation-for="AuthorImageName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AuthoDocumentId" class="control-label"></label>
+                    <input asp-for="AuthoDocumentId" class="form-control" />
+                    <span asp-validation-for="AuthoDocumentId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AuthoDocumentType" class="control-label"></label>
+                    <input asp-for="AuthoDocumentType" class="form-control" />
+                    <span asp-validation-for="AuthoDocumentType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DocumentName" class="control-label"></label>
+                    <input asp-for="DocumentName" class="form-control" />
+                    <span asp-validation-for="DocumentName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DocumentFormat" class="control-label"></label>
+                    <input asp-for="DocumentFormat" class="form-control" />
+                    <span asp-validation-for="DocumentFormat" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DocumentSize" class="control-label"></label>
+                    <input asp-for="DocumentSize" class="form-control" />
+                    <span asp-validation-for="DocumentSize" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DocumentDescription" class="control-label"></label>
+                    <textarea asp-for="DocumentDescription" class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                    <span asp-validation-for="DocumentDescription" class="text-danger"></span>
+                </div>
+                <div id="confirm" class="callout callout-warning" hidden>
+                    <h5>Confirme a transação!</h5>
+                    <p>Esta transação vai custar: <b id="cost"></b> créditos, deseja continuar?</p>
+                    <div class="icheck-success d-inline">
+                        <input type="checkbox" unchecked id="checkboxSuccess1">
+                        <label for="checkboxSuccess1">
+                            SIM
+                        </label>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row form-group card-footer">
+                        <div class="col">
+                            <button id="cancelar" type="button" class="btn btn-block btn-danger btn-lg mb-3">Cancelar</button>
+                        </div>
+                        <div class="col">
+                            <button id="enviar" type="button" class="btn btn-block btn-info btn-lg mb-3 float-right" disabled>Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-5 card-body">
+            <img id="imgshow" src="" width="300" />
+        </div>
+    </div>
+
+</body>
+
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/plugins/jquery/jquery.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#imagem').change(function () {
+
+            $('#imgshow').attr("src", $('#imagem').val());
+            
+
+            var url = "@Url.Action("Quote", "Document")";           
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: {
+                    imageHashToValidate: $('#imagem').val()
+                },
+                beforeSend: function () {
+
+                }
+            })
+                .done(function (data) {
+                $('#cost').text(data.gasPrice);
+                $('#confirm').removeAttr('hidden');
+
+            })
+                .fail(function (jqXHR, textStatus, data) {
+                    alert(data);
+                    $('#enviar').attr("disabled", true);
+            });
+
+        });
+
+        $('#checkboxSuccess1').change(function () {
+            if ($('#checkboxSuccess1').is(':checked')) {
+                $('#enviar').attr("disabled", false);
+            }
+        });
+    });
+
+</script>
+
