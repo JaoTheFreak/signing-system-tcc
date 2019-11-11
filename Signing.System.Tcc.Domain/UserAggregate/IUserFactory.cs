@@ -2,6 +2,6 @@
 {
     public interface IUserFactory
     {
-        User Create(string email, string passwordHash, string salt, string firstName, string lastName);
+        User Create(string email, string passwordHash, string salt, string firstName, string lastName, string documentNumber);
     }
 }

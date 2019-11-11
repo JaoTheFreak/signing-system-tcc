@@ -67,6 +67,16 @@
                     </div>
 
                     <div class="input-group mb-3">
+                        <input asp-for="DocumentNumber" class="form-control" placeholder="Documento" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-id-card"></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
                         <input asp-for="Email" class="form-control" placeholder="E-mail" />
                         <div class="input-group-append">
                             <div class="input-group-text">

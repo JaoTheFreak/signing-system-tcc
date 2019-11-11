@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Signing.System.Tcc.Helpers;
 
 namespace Signing.System.Tcc.MVC.ViewModels.Account
 {
@@ -27,6 +28,13 @@ namespace Signing.System.Tcc.MVC.ViewModels.Account
         [DisplayName("E-mail")]
         [EmailAddress(ErrorMessage = "O campo {0} não contém um endereço de e-mail válido!")]        
         public string Email { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório!", AllowEmptyStrings = false)]
+        [DisplayName("Documento")]
+        [EmailAddress(ErrorMessage = "O campo {0} não contém um endereço de e-mail válido!")]
+        public string DocumentNumber { get => _documentNumber; set { _documentNumber = value.RetrieveNumbersOnly(); } }
+
+        private string _documentNumber;
 
         [Required(ErrorMessage = "O campo {0} é obrigatório! E não pode estar em branco!", AllowEmptyStrings = false)]
         [StringLength(100, MinimumLength = 4, ErrorMessage = "O campo {0} precisa ter no mínimo {2} e no máximo {1} caracteres.")]

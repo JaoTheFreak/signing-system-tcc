@@ -134,7 +134,7 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                 var newPassword = Helpers.Helpers.GenerateHashSHA256($"{inputRegister.Password}{inputRegister.Salt}");
 
-                var newUser = userFactory.Create(inputRegister.Email, newPassword, inputRegister.Salt, inputRegister.FirstName, inputRegister.LastName);
+                var newUser = userFactory.Create(inputRegister.Email, newPassword, inputRegister.Salt, inputRegister.FirstName, inputRegister.LastName, inputRegister.DocumentNumber);
 
                 _userAppService.Add(newUser);
 

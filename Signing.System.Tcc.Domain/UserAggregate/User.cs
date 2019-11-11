@@ -4,7 +4,7 @@ namespace Signing.System.Tcc.Domain.UserAggregate
 {
     public class User
     {
-        public User(string email, string passwordHash, string salt, string firstName, string lastName)
+        public User(string email, string passwordHash, string salt, string firstName, string lastName, string documentNumber)
         {
             Email = email;
 
@@ -15,12 +15,15 @@ namespace Signing.System.Tcc.Domain.UserAggregate
             FirstName = firstName;
 
             LastName = lastName;
+
+            DocumentNumber = documentNumber;
             
             CreatedAt = DateTime.Now;
         }
 
         public int Id { get; private set; }        
         public string PasswordHash { get; private set; }
+        public string DocumentNumber { get; set; }
         public string Salt { get; private set; }
         public string Email { get; private set; }
         public string FirstName { get; private set; }
