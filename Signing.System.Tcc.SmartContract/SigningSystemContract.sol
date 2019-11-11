@@ -16,54 +16,36 @@ contract SigningSystemContract {
     }
     
     modifier imageExist(string memory imageHash) {
-        require(!RegisteredImages[imageHash], "The Image already is registred!");
+        require(bytes(RegisteredImages[imageHash].Hash).length == 0, "The Image is already registred!");
         _;
-    }
-    
-    struct Author {
-        string Document;
     }
     
     struct Image {
         string Hash;
         uint CreatedAt;
-        string AthorDocument;
+        string AuthorDocument;
     }
-    
-    uint totalAuthors;
-    
-    mapping (uint => Author[]) Authors;
     
     mapping (string => Image[]) AuthorImages;
     
-    mapping (string => bool) RegisteredImages;
+    mapping (string => Image) RegisteredImages;
     
     function registerDocument(string memory authorDocument, string memory imageHash) public onlyOwner imageExist(imageHash) {
-        require(bytes(authorDocument).length > 0, "AuthorDocument CAN'T BE EMPTY!");
-        require(bytes(imageHash).length > 0, "ImageHash CAN'T BE EMPTY!");
+        require(bytes(authorDocument).length > 0, "AuthorDocument can't be empty!");
+        require(bytes(imageHash).length > 0, "ImageHash can't be empty!");
         
-        Author memory newAuthor = Author(authorDocument);
-        
-        if(AuthorImages[authorDocument].length == 0)
-            Authors[totalAuthors++].push(newAuthor);
-        
-        Image memory newImage = Image(imageHash, now, newAuthor.Document);
+        Image memory newImage = Image(imageHash, now, authorDocument);
         
         AuthorImages[authorDocument].push(newImage);
         
-        RegisteredImages[imageHash] = true;
+        RegisteredImages[imageHash] = newImage;
     }
     
     function getImageByAuthor(string memory authorDocument) public view returns (Image [] memory) {
         return AuthorImages[authorDocument];
     }
     
-    function verifyImage(string memory imageHash) public view returns (string memory) {
-        
+    function verifyImage(string memory imageHash) public view returns (Image memory) {
+        return RegisteredImages[imageHash];
     }
-    
-    function hue() public view returns (uint) {
-        return totalAuthors;
-    }
-    
 }
