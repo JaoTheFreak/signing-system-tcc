@@ -20,7 +20,10 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "CONN_STRING": "Server=127.0.0.1; Port=5434; Database=signing_system;User Id=dev; Password=123@dev;"
+        "CONN_STRING": "Server=127.0.0.1; Port=5434; Database=signing_system;User Id=dev; Password=123@dev;",
+        "INFURA_PROJECT": "https://ropsten.infura.io/v3/c04cfa171c2140fa8cb57c4287825d51",
+        "ACCOUNT_ADDRESS": "0x3aceBa8696918A3AF245e059049685De52300ad5",
+        "CONTRACT_ADDRESS": "0xD27365138c2CDE014E0C79c198e9512DdA3686cc"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     },

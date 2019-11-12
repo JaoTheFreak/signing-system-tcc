@@ -31,7 +31,7 @@ namespace Signing.System.Tcc.MVC.ViewModels.Account
 
         [Required(ErrorMessage = "O campo {0} é obrigatório!", AllowEmptyStrings = false)]
         [DisplayName("Documento")]
-        [EmailAddress(ErrorMessage = "O campo {0} não contém um endereço de e-mail válido!")]
+        [DataType(DataType.Text)]
         public string DocumentNumber { get => _documentNumber; set { _documentNumber = value.RetrieveNumbersOnly(); } }
 
         private string _documentNumber;

@@ -7,14 +7,17 @@ using Signing.System.Tcc.Data.Context;
 using Signing.System.Tcc.Data.Repositories;
 using Signing.System.Tcc.Domain.UnitOfWork;
 using Signing.System.Tcc.Domain.UserAggregate;
+using Signing.System.Tcc.Ethereum.Integration;
+using Signing.System.Tcc.Ethereum.Interfaces;
 
 namespace Signing.System.Tcc.DependencyConfiguration
 {
     public static class DependencyInjectionExtensionMethod
     {
-        public static void AddDepencyInjectionSigningSystem(this IServiceCollection service)
+        public static void AddDepencyInjectionSigningSystem(this IServiceCollection service, SmartContractOptions smartContractOptions)
         {
-            
+            service.AddScoped<ISmartContract, SmartContract>(p => new SmartContract(smartContractOptions.ProjectInfuraEndPoint, smartContractOptions.ContractAddress, smartContractOptions.AccountAddress));
+
             service.AddScoped<DbContext, SigningContext>();
 
             service.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -27,5 +30,14 @@ namespace Signing.System.Tcc.DependencyConfiguration
             service.AddScoped<IUserFactory, UserFactory>();
 
         }
+    }
+
+    public class SmartContractOptions
+    {
+        public string ContractAddress { get; set; }
+
+        public string AccountAddress { get; set; }
+
+        public string ProjectInfuraEndPoint { get; set; }
     }
 }

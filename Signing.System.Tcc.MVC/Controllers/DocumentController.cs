@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Signing.System.Tcc.Ethereum.Interfaces;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
     public class DocumentController : Controller
     {
         [HttpGet]
-        public IActionResult Validate([FromQuery] string imageHashToValidate)
+        public async Task<IActionResult> Validate([FromServices] ISmartContract  smartContract, [FromQuery] string imageHashToValidate)
         {
+            await smartContract.VerifyImageByHashAsync(imageHashToValidate);
+
             var jsonToReturn = new 
             { 
                 imagePath = "https://pbs.twimg.com/profile_images/955211651371995137/3iIrG83t.jpg",
@@ -28,7 +32,7 @@ namespace Signing.System.Tcc.MVC.Controllers
 
             return Json(jsonToReturn);
         }
-
+        
         [HttpGet]
         public IActionResult NewDocument()
         {
@@ -36,7 +40,7 @@ namespace Signing.System.Tcc.MVC.Controllers
         }
 
         [HttpPost, ActionName("Quote")]
-        public IActionResult Quote(Microsoft.AspNetCore.Http.IFormFile file)
+        public IActionResult Quote(IFormFile file)
         {
             var jsonToReturn = new
             {

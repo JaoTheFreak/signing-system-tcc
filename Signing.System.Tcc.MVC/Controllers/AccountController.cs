@@ -132,6 +132,19 @@ namespace Signing.System.Tcc.MVC.Controllers
                     return View();
                 }
 
+                user = _userAppService.FirstOrDefault(u => u.DocumentNumber.Equals(inputRegister.DocumentNumber));
+
+                if (user != null)
+                {
+                    _notificationService.AddErrorToastMessage("Já existe um usuário com o documento cadastrado!", new ToastrOptions
+                    {
+                        CloseButton = true,
+                        Title = "Usuario Existente"
+                    });
+
+                    return View();
+                }
+
                 var newPassword = Helpers.Helpers.GenerateHashSHA256($"{inputRegister.Password}{inputRegister.Salt}");
 
                 var newUser = userFactory.Create(inputRegister.Email, newPassword, inputRegister.Salt, inputRegister.FirstName, inputRegister.LastName, inputRegister.DocumentNumber);
@@ -140,7 +153,7 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                 if (_unitOfWorkAppService.Complete() == 1)
                 {
-                    _notificationService.AddErrorToastMessage($"Usuário {inputRegister.Email} registrado com sucesso!", new ToastrOptions
+                    _notificationService.AddSuccessToastMessage($"Usuário {inputRegister.Email} registrado com sucesso!", new ToastrOptions
                     {
                         CloseButton = true,
                         Title = "Novo Usuário Registrado"

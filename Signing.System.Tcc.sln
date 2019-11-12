@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Signing.System.Tcc.MVC", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Signing.System.Tcc.Application", "Signing.System.Tcc.Application\Signing.System.Tcc.Application.csproj", "{CE432071-A91F-4583-A202-3DA646BBC0A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signing.System.Tcc.Helpers", "Signing.System.Tcc.Helpers\Signing.System.Tcc.Helpers.csproj", "{F9CFE288-69F5-4DFA-9939-4CC158863A1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Signing.System.Tcc.Helpers", "Signing.System.Tcc.Helpers\Signing.System.Tcc.Helpers.csproj", "{F9CFE288-69F5-4DFA-9939-4CC158863A1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signing.System.Tcc.Ethereum", "Signing.System.Tcc.Ethereum\Signing.System.Tcc.Ethereum.csproj", "{A1FFFEED-8392-4EB0-8EED-A720D30D6135}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,18 @@ Global
 		{F9CFE288-69F5-4DFA-9939-4CC158863A1D}.Release|x64.Build.0 = Release|Any CPU
 		{F9CFE288-69F5-4DFA-9939-4CC158863A1D}.Release|x86.ActiveCfg = Release|Any CPU
 		{F9CFE288-69F5-4DFA-9939-4CC158863A1D}.Release|x86.Build.0 = Release|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Debug|x64.Build.0 = Debug|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Debug|x86.Build.0 = Debug|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Release|x64.Build.0 = Release|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1FFFEED-8392-4EB0-8EED-A720D30D6135}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

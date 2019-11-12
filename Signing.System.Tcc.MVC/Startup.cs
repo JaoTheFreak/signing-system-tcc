@@ -29,7 +29,12 @@ namespace Signing.System.Tcc.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             // Dependency Injection Configuration
-            services.AddDepencyInjectionSigningSystem();
+            services.AddDepencyInjectionSigningSystem(new SmartContractOptions
+            {
+                ProjectInfuraEndPoint = Environment.GetEnvironmentVariable("INFURA_PROJECT"),
+                AccountAddress = Environment.GetEnvironmentVariable("ACCOUNT_ADDRESS"),
+                ContractAddress = Environment.GetEnvironmentVariable("CONTRACT_ADDRESS")
+            });
 
             services.AddScoped<IAuthenticantionService, AuthService>();
 
@@ -60,7 +65,7 @@ namespace Signing.System.Tcc.MVC
             });
 
             services.ConfigureApplicationCookie(options =>
-            {                
+            {
                 options.Cookie.MaxAge = TimeSpan.FromMinutes(30);
 
                 options.AccessDeniedPath = "/Account/AccessDenied";
@@ -75,7 +80,7 @@ namespace Signing.System.Tcc.MVC
 
                 options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
 
-                options.SlidingExpiration = true;                
+                options.SlidingExpiration = true;
             });
         }
 

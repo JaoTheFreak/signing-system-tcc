@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Signing.System.Tcc.Application\Signing.System.Tcc.Application.csproj" />
     <ProjectReference Include="..\Signing.System.Tcc.Data\Signing.System.Tcc.Data.csproj" />
+    <ProjectReference Include="..\Signing.System.Tcc.Ethereum\Signing.System.Tcc.Ethereum.csproj" />
   </ItemGroup>
 
   <ItemGroup>
