@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Signing.System.Tcc.Domain.EtherAggregate;
 using Signing.System.Tcc.Ethereum.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
@@ -53,6 +52,14 @@ namespace Signing.System.Tcc.MVC.Controllers
         [HttpPost, ActionName("NewDocument")]
         public IActionResult NewDocumentPost()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Index([FromServices] IEtherFactory etherFactory)
+        {
+
+
             return View();
         }
     }

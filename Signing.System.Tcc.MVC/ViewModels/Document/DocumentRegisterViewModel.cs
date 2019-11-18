@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 namespace Signing.System.Tcc.MVC.ViewModels.Document
 {
-    public class DocumentViewModel
+    public class DocumentRegisterViewModel
     {
         [Required(ErrorMessage = "O campo {0} é obrigatório!", AllowEmptyStrings = false)]
         [DisplayName("Nome do autor")]

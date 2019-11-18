@@ -15,6 +15,8 @@ namespace Signing.System.Tcc.MVC.Services
         {
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.PrimarySid, user.Id.ToString()),
+                new Claim("Document", user.DocumentNumber),
                 new Claim(ClaimTypes.Name, user.DisplayName),
                 new Claim(ClaimTypes.Email, user.Email)                
             };

@@ -34,7 +34,7 @@ namespace Signing.System.Tcc.MVC
                 ProjectInfuraEndPoint = Environment.GetEnvironmentVariable("INFURA_PROJECT"),
                 AccountAddress = Environment.GetEnvironmentVariable("ACCOUNT_ADDRESS"),
                 ContractAddress = Environment.GetEnvironmentVariable("CONTRACT_ADDRESS")
-            });
+            }, Environment.GetEnvironmentVariable("COINBASE_URL_API"));
 
             services.AddScoped<IAuthenticantionService, AuthService>();
 
