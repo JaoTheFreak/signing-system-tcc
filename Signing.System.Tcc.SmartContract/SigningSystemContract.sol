@@ -1,6 +1,6 @@
-pragma solidity 0.5.12;
+pragma solidity 0.5.11;
 
-pragma experimental ABIEncoderV2;
+//pragma experimental ABIEncoderV2;
 
 contract SigningSystemContract {
     
@@ -26,9 +26,9 @@ contract SigningSystemContract {
         string AuthorDocument;
     }
     
-    mapping (string => Image[]) AuthorImages;
+    mapping (string => Image[]) public AuthorImages;
     
-    mapping (string => Image) RegisteredImages;
+    mapping (string => Image) public RegisteredImages;
     
     function registerDocument(string memory authorDocument, string memory imageHash) public onlyOwner imageExist(imageHash) {
         require(bytes(authorDocument).length > 0, "AuthorDocument can't be empty!");
@@ -41,11 +41,15 @@ contract SigningSystemContract {
         RegisteredImages[imageHash] = newImage;
     }
     
-    function getImageByAuthor(string memory authorDocument) public view returns (Image [] memory) {
-        return AuthorImages[authorDocument];
+    /*function getImageByAuthor(string memory authorDocument) public view returns (Image [] memory images) {
+        images = AuthorImages[authorDocument]; 
+        
+        return images;
     }
     
-    function verifyImage(string memory imageHash) public view returns (Image memory) {
-        return RegisteredImages[imageHash];
-    }
+    function verifyImage(string memory imageHash) public view returns (Image memory foundedImage) {
+        foundedImage = RegisteredImages[imageHash];
+        
+        return foundedImage;
+    }*/
 }

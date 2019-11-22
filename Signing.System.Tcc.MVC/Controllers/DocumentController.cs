@@ -12,7 +12,7 @@ namespace Signing.System.Tcc.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Validate([FromServices] ISmartContract  smartContract, [FromQuery] string imageHashToValidate)
         {
-            await smartContract.VerifyImageByHashAsync(imageHashToValidate);
+            var registeredImage = await smartContract.VerifyImageByHashAsync(imageHashToValidate);
 
             var jsonToReturn = new 
             { 
@@ -33,8 +33,16 @@ namespace Signing.System.Tcc.MVC.Controllers
         }
         
         [HttpGet]
-        public IActionResult NewDocument()
+        public async Task<IActionResult> NewDocument([FromServices] ISmartContract smartContract)
         {
+            var doc = "06914456992";
+
+            var hash = "9129043929f1309a95ad8b5039185c92b2fff3913d5ed3872a414e266cb94686";
+
+            await smartContract.VerifyImageByAuthorDocumentAsync(doc);
+
+            //await smartContract.RegisterImageAsync(doc, hash);            
+
             return View();
         }
 

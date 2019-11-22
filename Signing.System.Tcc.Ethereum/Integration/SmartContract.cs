@@ -1,11 +1,12 @@
-﻿using Nethereum.ABI.FunctionEncoding.Attributes;
-using Nethereum.Contracts;
-using Nethereum.Hex.HexTypes;
-using Nethereum.Web3;
+﻿using Nethereum.Web3;
+using Nethereum.Web3.Accounts;
 using Signing.System.Tcc.Ethereum.Interfaces;
+using Signing.System.Tcc.Ethereum.SmartContract;
+using Signing.System.Tcc.Ethereum.SmartContract.ContractDefinition;
 using System;
-using System.Numerics;
 using System.Threading.Tasks;
+using Signing.System.Tcc.Helpers;
+using System.Collections.Generic;
 
 namespace Signing.System.Tcc.Ethereum.Integration
 {
@@ -17,6 +18,8 @@ namespace Signing.System.Tcc.Ethereum.Integration
 
         private readonly string _userAccountAddress;
 
+        private readonly SigningSystemContractService _myContract;
+
         public SmartContract(string projectEndPoint, string contractAddress, string userAccountAddress)
         {
             _web3 = new Web3(projectEndPoint);
@@ -24,71 +27,92 @@ namespace Signing.System.Tcc.Ethereum.Integration
             _contractAddress = contractAddress;
 
             _userAccountAddress = userAccountAddress;
+
+            var privateKey = "0xD1042D34B0D0E04E5585D84657CC3CA738E7B735794D68AF66FF2AF132164B3B";
+
+            var account = new Account(privateKey);
+
+            _myContract = new SigningSystemContractService(new Web3(account, projectEndPoint), _contractAddress);
         }
 
-        public async Task RegisterNewImage(string authorDocument, string hashImage)
-        {
-            var abi = @"[{""constant"":false,""inputs"":[{""internalType"":""string"",""name"":""authorDocument"",""type"":""string""},{""internalType"":""string"",""name"":""imageHash"",""type"":""string""}],""name"":""registerDocument"",""outputs"":[],""payable"":false,""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[],""payable"":false,""stateMutability"":""nonpayable"",""type"":""constructor""},{""constant"":true,""inputs"":[{""internalType"":""string"",""name"":""authorDocument"",""type"":""string""}],""name"":""getImageByAuthor"",""outputs"":[{""components"":[{""internalType"":""string"",""name"":""Hash"",""type"":""string""},{""internalType"":""uint256"",""name"":""CreatedAt"",""type"":""uint256""},{""internalType"":""string"",""name"":""AuthorDocument"",""type"":""string""}],""internalType"":""struct SigningSystemContract.Image[]"",""name"":"""",""type"":""tuple[]""}],""payable"":false,""stateMutability"":""view"",""type"":""function""},{""constant"":true,""inputs"":[{""internalType"":""string"",""name"":""imageHash"",""type"":""string""}],""name"":""verifyImage"",""outputs"":[{""components"":[{""internalType"":""string"",""name"":""Hash"",""type"":""string""},{""internalType"":""uint256"",""name"":""CreatedAt"",""type"":""uint256""},{""internalType"":""string"",""name"":""AuthorDocument"",""type"":""string""}],""internalType"":""struct SigningSystemContract.Image"",""name"":"""",""type"":""tuple""}],""payable"":false,""stateMutability"":""view"",""type"":""function""}]";
-            
-            var theContract = _web3.Eth.GetContract(abi, _contractAddress);
-
-            var registerFunction = theContract.GetFunction("");
-
-            var transactionHash = await registerFunction.EstimateGasAsync(_userAccountAddress, authorDocument, hashImage);            
-
-        }
-
-        public async Task<string> VerifyImageByHashAsync(string hashImage)
+        public async Task RegisterImageAsync(string authorDocument, string hashImage)
         {
             try
             {
-                var abi = @"[{""constant"":false,""inputs"":[{""internalType"":""string"",""name"":""authorDocument"",""type"":""string""},{""internalType"":""string"",""name"":""imageHash"",""type"":""string""}],""name"":""registerDocument"",""outputs"":[],""payable"":false,""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[],""payable"":false,""stateMutability"":""nonpayable"",""type"":""constructor""},{""constant"":true,""inputs"":[{""internalType"":""string"",""name"":""authorDocument"",""type"":""string""}],""name"":""getImageByAuthor"",""outputs"":[{""components"":[{""internalType"":""string"",""name"":""Hash"",""type"":""string""},{""internalType"":""uint256"",""name"":""CreatedAt"",""type"":""uint256""},{""internalType"":""string"",""name"":""AuthorDocument"",""type"":""string""}],""internalType"":""struct SigningSystemContract.Image[]"",""name"":"""",""type"":""tuple[]""}],""payable"":false,""stateMutability"":""view"",""type"":""function""},{""constant"":true,""inputs"":[{""internalType"":""string"",""name"":""imageHash"",""type"":""string""}],""name"":""verifyImage"",""outputs"":[{""components"":[{""internalType"":""string"",""name"":""Hash"",""type"":""string""},{""internalType"":""uint256"",""name"":""CreatedAt"",""type"":""uint256""},{""internalType"":""string"",""name"":""AuthorDocument"",""type"":""string""}],""internalType"":""struct SigningSystemContract.Image"",""name"":"""",""type"":""tuple""}],""payable"":false,""stateMutability"":""view"",""type"":""function""}]";
-
-                var theContract = _web3.Eth.GetContract(abi, _contractAddress);
-
-                var registerFunction = theContract.GetFunction("registerDocument");
-                
-                var transactionHash = await registerFunction.EstimateGasAsync(_userAccountAddress, 8000029.ToHexBigInteger(), 120.ToHexBigInteger(), "06914456992", hashImage);
-                
-                var verifyImageFunction = new VerifyImageFunction
+                var q = new RegisterDocumentFunction
                 {
-                    ImageHash = hashImage
+                    ImageHash = hashImage,
+                    AuthorDocument = authorDocument,
+                    FromAddress = _userAccountAddress
                 };
 
-                var verifyImageHandler = _web3.Eth.GetContractQueryHandler<VerifyImageFunction>();
+                var oi = await _myContract.ContractHandler.EstimateGasAsync(q);
 
-                var result = await verifyImageHandler.QueryDeserializingToObjectAsync<ImageSmartContract>(verifyImageFunction, _contractAddress);
-
-                return result.Hash;
+                var eoq = await _myContract.RegisterDocumentRequestAndWaitForReceiptAsync(q);
             }
             catch (Exception ex)
             {
 
-                return null;
+                return;
+            }
+        }
+
+        public async Task VerifyImageByAuthorDocumentAsync(string authorDocument)
+        {
+            try
+            {
+                var receipts = new List<AuthorImagesOutputDTO>();
+
+
+                var function = new AuthorImagesFunction
+                {
+                    FromAddress = _userAccountAddress,
+                    AuthorDocument = authorDocument,
+                    Index = 0
+                };
+
+                AuthorImagesOutputDTO receiptResult;
+
+                do
+                {
+                    receiptResult = await _myContract.AuthorImagesQueryAsync(function);
+
+                    if (receiptResult == null)
+                        break;
+
+                    receipts.Add(receiptResult);
+
+                    function.Index++;
+                } while (true);
+
+                return;
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+
+        public async Task<(string AuthorDocument, string ImageHash, DateTime CreatedAt)> VerifyImageByHashAsync(string hashImage)
+        {
+            try
+            {
+                var function = new RegisteredImagesFunction
+                {
+                    FromAddress = _userAccountAddress,
+                    ReturnValue1 = hashImage
+                };
+
+                var receiptResult = await _myContract.RegisteredImagesQueryAsync(function);
+
+                return (receiptResult.AuthorDocument, receiptResult.Hash, receiptResult.CreatedAt.ToDateTime());
+            }
+            catch (Exception ex)
+            {
+                return (null, null, DateTime.MinValue);
             }
         }
 
     }
 
-
-
-    [Function("verifyImage", "string")]
-    public class VerifyImageFunction : FunctionMessage
-    {
-        [Parameter("string", "imageHash", 1)]
-        public string ImageHash { get; set; }
-    }
-
-    [FunctionOutput]
-    public class ImageSmartContract : IFunctionOutputDTO
-    {
-        [Parameter("string", "Hash", 1)]
-        public string Hash { get; set; }
-
-        [Parameter("uint256", "CreatedAt", 2)]
-        public int CreatedAt { get; set; }
-
-        [Parameter("string", "AuthorDocument", 3)]
-        public string AuthorDocument { get; set; }
-    }
 }

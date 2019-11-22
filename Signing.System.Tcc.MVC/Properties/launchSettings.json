@@ -23,7 +23,8 @@
         "CONN_STRING": "Server=127.0.0.1; Port=5434; Database=signing_system;User Id=dev; Password=123@dev;",
         "INFURA_PROJECT": "https://ropsten.infura.io/v3/c04cfa171c2140fa8cb57c4287825d51",
         "ACCOUNT_ADDRESS": "0x3aceBa8696918A3AF245e059049685De52300ad5",
-        "CONTRACT_ADDRESS": "0xD27365138c2CDE014E0C79c198e9512DdA3686cc",
+        //"CONTRACT_ADDRESS": "0xD27365138c2CDE014E0C79c198e9512DdA3686cc",
+        "CONTRACT_ADDRESS": "0x7f7276D18888562cF42Ef2D1D609209911F87fD6",
         "COINBASE_URL_API": "https://api.coinbase.com/v2/"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"

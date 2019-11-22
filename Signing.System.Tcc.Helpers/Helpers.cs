@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -37,6 +39,16 @@ namespace Signing.System.Tcc.Helpers
 
                 entity.Relational().TableName = entity.ClrType.Name;
             }
+        }
+
+        public static DateTime ToDateTime(this BigInteger unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            var baseDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            
+            var dateTimeConverted = baseDateTime.AddSeconds( (int) unixTimeStamp ).ToLocalTime();
+
+            return dateTimeConverted;
         }
 
         public static string GenerateHashSHA256(string inputData)
