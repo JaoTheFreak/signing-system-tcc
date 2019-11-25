@@ -4,22 +4,32 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Signing.System.Tcc.Data.Migrations
 {
-    public partial class RecordEntityCreated : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Users",
-                table: "Users");
+            migrationBuilder.CreateSequence<int>(
+                name: "User",
+                startValue: 12L);
 
-            migrationBuilder.RenameTable(
-                name: "Users",
-                newName: "User");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_User",
-                table: "User",
-                column: "Id");
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false, defaultValueSql: "nextval('\"User\"')"),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    DocumentNumber = table.Column<string>(nullable: true),
+                    Salt = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false, defaultValueSql: "NOW()"),
+                    UpdatedAt = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Record",
@@ -62,18 +72,11 @@ namespace Signing.System.Tcc.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Record");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_User",
-                table: "User");
+            migrationBuilder.DropTable(
+                name: "User");
 
-            migrationBuilder.RenameTable(
-                name: "User",
-                newName: "Users");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Users",
-                table: "Users",
-                column: "Id");
+            migrationBuilder.DropSequence(
+                name: "User");
         }
     }
 }

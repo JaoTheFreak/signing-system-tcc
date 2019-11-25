@@ -10,8 +10,8 @@ using Signing.System.Tcc.Data.Context;
 namespace Signing.System.Tcc.Data.Migrations
 {
     [DbContext(typeof(SigningContext))]
-    [Migration("20191125021248_RecordEntityCreated")]
-    partial class RecordEntityCreated
+    [Migration("20191125021543_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
