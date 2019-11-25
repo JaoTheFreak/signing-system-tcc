@@ -1,4 +1,5 @@
-﻿@{
+﻿@await Component.InvokeAsync("NToastNotify")
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -155,10 +156,17 @@
     <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/crypto-js/core.js"></script>
     <script src="~/lib/crypto-js/sha256.js"></script>
+
+    <!-- BEGIN TOASTR AUX FIELDS -->
+    <input type="hidden" id="success" value="@TempData["success"]" />
+    <input type="hidden" id="info" value="@TempData["info"]" />
+    <input type="hidden" id="warning" value="@TempData["warning"]" />
+    <input type="hidden" id="error" value="@TempData["error"]" />
+    <!-- END TOASTR AUX FIELDS -->
 </body>
 <script>
 
-    $(document).ready(function () {                
+    $(document).ready(function () {
         $('#imageToHash').on("change", function () {
 
             var imageToHash = this.files[0];

@@ -10,7 +10,7 @@ namespace Signing.System.Tcc.Ethereum.Interfaces
 
         Task<decimal> EstimateTransactionPriceAsync(string authorDocument, string hashImage, EtherValueObject ether);
 
-        Task RegisterImageAsync(string authorDocument, string hashImage);
+        Task<(string txHash, decimal txFee, bool txSuccess)> RegisterImageAsync(string authorDocument, string hashImage);
 
         Task VerifyImageByAuthorDocumentAsync(string authorDocument);
     }

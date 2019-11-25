@@ -6,7 +6,7 @@ namespace Signing.System.Tcc.Domain.RecordAggregate
     public class Record
     {
         public Record(string transactionHash, decimal transactionFee, string midiaHash, string midiaDescription,
-            string midiaName, string midiaResolution, string midiaExtension, int midiaSizeBytes, string midiaUrl)
+            string midiaName, string midiaResolution, string midiaExtension, long midiaSizeBytes, string midiaUrl)
         {
             TransactionHash = transactionHash;
 
@@ -38,10 +38,10 @@ namespace Signing.System.Tcc.Domain.RecordAggregate
         public string MidiaName { get; private set; }
         public string MidiaExtension { get; private set; }
         public string MidiaResolution { get; private set; }
-        public int MidiaSizeBytes { get; private set; }
+        public long MidiaSizeBytes { get; private set; }
         public string MidiaUrl { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public DateTime? UpdatedAte { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
 
         private User _user;
 
