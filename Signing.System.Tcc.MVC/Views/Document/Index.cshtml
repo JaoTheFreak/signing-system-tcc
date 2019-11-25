@@ -1,0 +1,233 @@
+﻿@model IEnumerable<Signing.System.Tcc.MVC.ViewModels.Document.DocumentsRegisteredViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>
+    Registro de Autoria em Blockchain
+</h1>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-md-3">
+                    <a asp-action="NewDocument" class="btn btn-primary btn-block btn-info mb-3">Registrar Imagem </a>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Opções</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="nav nav-pills flex-column">
+                                <li class="nav-item active">
+                                <li class="nav-item">
+                                    <a onclick="openCredit()" class="nav-link">
+                                        <i class="far fa-file-alt"></i> Créditos do usuário
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-file-alt"></i> Configurações da Conta
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                </div>
+                <!-- /.col -->
+                <div class="col-md-9">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Imagens Registradas</h3>
+
+                            <div class="card-tools">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" placeholder="Localizar Imagem">
+                                    <div class="input-group-append">
+                                        <div class="btn btn-primary btn-info">
+                                            <i class="fas fa-search"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="mailbox-controls">
+
+                                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></button>
+
+                            </div>
+                            <div class="table-responsive mailbox-messages">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Imagem
+                                            </th>
+                                            <th>
+                                                Nome da Imagem
+                                            </th>
+                                            <th>
+                                                Data e hora do registro
+                                            </th>
+                                            <th>
+                                                Estado
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            @foreach (var item in Model)
+                                            {
+                                            <tr>
+                                                <td>
+                                                    <img width="100px" src="@item.ImageUrl" alt="imagem">
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ArtName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RegisterDate)
+                                                </td>
+                                                <td>
+                                                    <div type="text" class="btn btn-block btn-success btn-xs">Registrada</div>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-block btn-info" style="margin-left:10px, 10px" onclick="checkImageByHash(@item.ImageHash)">Validar</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="modalHome" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title alert alert-success">Registro Localizado</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="card-body pt-0">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <h2 class="lead text-bold"><b>Nome do autor: </b><spam id="authorImageName"></spam></h2>
+                                                        <p class="text-muted text-sm"><b>Identificação do autor: </b> <spam id="authoDocumentId"></spam></p>
+                                                        <p class="text-muted text-sm"><b>Hash do registro: </b> <spam id="transactionId"></spam></p>
+                                                        <p class="text-muted text-sm"><b>Hash da imagem: </b> <spam id="imageHash"></spam></p>
+                                                        <p class="text-muted text-sm"><b>Data do registro: </b> <spam id="imageRegisterDate"></spam></p>
+                                                        <ul class="ml-4 mb-0 fa-ul text-muted">
+                                                            <li class="small"><span class="fa-li"><i class="fas fa-lg"></i></span> Nome da obra: <spam id="documentName"></spam></li>
+                                                            <li class="small"><span class="fa-li"><i class="fas fa-lg"></i></span> Formato: <spam id="documentFormat"></spam></li>
+                                                            <li class="small"><span class="fa-li"><i class="fas fa-lg"></i></span> Dimensões: <spam id="documentSize"></spam></li>
+                                                            <li class="small"><span class="fa-li"><i class="fas fa-lg"></i></span> Descrição: <spam id="documentDescription"></spam></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-5 text-center m-3">
+                                                        <img id="imagePath" src="" alt="" class="img-fluid" style="max-width:300px">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                                            <a id="imgDownload" href="" download="imagem" class="btn btn-primary btn-info" role="button">Salvar Imagem</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="modalCredit" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Créditos do usuário</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="card-body pt-0">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <h2 class="lead text-bold"><b>Créditos do usuário </b><spam id="authorImageName"></spam></h2>
+                                                    </div>
+                                                    <div class="col-5 text-center m-3">
+                                                        <img id="imagePath" src="" alt="" class="img-fluid" style="max-width:300px">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="overlay" id="scroll-validate" hidden>
+                                <i class="fas fa-2x fa-sync fa-spin"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+    <div class="row pt-xl-5">
+        <div class="col">
+            <p class="text-center">Leia mais sobre <a href="https://docs.microsoft.com/aspnet/core">registro de imagens digitais em blockchain</a>.</p>
+        </div>
+    </div>
+
+    <script>
+
+        function openCredit() {
+            $('#modalCredit').modal('show');
+
+        }
+        
+        function checkImageByHash(imageHash) {
+            var url = "@Url.Action("Validate", "Document")";
+
+            $.ajax({
+                method: "GET",
+                url: url,
+                data: {
+                    imageHashToValidate: imageHash
+                },
+                beforeSend: function () {
+                    $('#scroll-validate').show();
+                }
+            })
+                .done(function (data) {
+                    $("#scroll-validate").hide();
+                    $('#modalHome').modal('show');
+                    $('#authorImageName').text(data.authorImageName);
+                    $('#authoDocumentId').text(data.authoDocumentId);
+                    $('#transactionId').text(data.transactionId);
+                    $('#imageHash').text(data.imageHash);
+                    $('#imageRegisterDate').text(data.imageRegisterDate);
+                    $('#documentName').text(data.documentName);
+                    $('#documentFormat').text(data.documentFormat);
+                    $('#documentSize').text(data.documentSize);
+                    $('#documentDescription').text(data.documentDescription);
+                    $('#imagePath').attr("src", data.imagePath);
+                    $('#imgDownloadButton').attr("href", data.imagePath);
+
+                    console.log(data);
+                })
+                .fail(function (jqXHR, textStatus, data) {
+                    alert(data);
+                    $('#hashField').val("");
+                });
+        }
+
+   
+    </script>

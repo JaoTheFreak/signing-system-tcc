@@ -3,6 +3,8 @@ using Signing.System.Tcc.Application.Interfaces;
 using Signing.System.Tcc.Domain.EtherAggregate;
 using Signing.System.Tcc.Ethereum.Interfaces;
 using Signing.System.Tcc.MVC.ViewModels.Document;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -103,8 +105,38 @@ namespace Signing.System.Tcc.MVC.Controllers
         public IActionResult Index([FromServices] IEtherFactory etherFactory)
         {
 
+            var modelList = new List<DocumentsRegisteredViewModel> {
+                new DocumentsRegisteredViewModel
+                {
+                    ArtName = "Foto Paisagem",
+                    RegisterDate = DateTime.Now,
+                    RegisterSuccessTrue = true,
+                    ImageUrl = "https://pbs.twimg.com/profile_images/955211651371995137/3iIrG83t.jpg",
+                    ImageHash = "0x1"
 
-            return View();
+
+                },
+                new DocumentsRegisteredViewModel
+                {
+                     ArtName = "Foto Rosto",
+                    RegisterDate = DateTime.Now,
+                    RegisterSuccessTrue = true,
+                    ImageUrl = "https://pbs.twimg.com/profile_images/955211651371995137/3iIrG83t.jpg",
+                    ImageHash = "0x2"
+
+                },
+                new DocumentsRegisteredViewModel
+                {
+                    ArtName = "Foto Ruas",
+                    RegisterDate = DateTime.Now,
+                    RegisterSuccessTrue = false,
+                    ImageUrl = "https://pbs.twimg.com/profile_images/955211651371995137/3iIrG83t.jpg",
+                    ImageHash = "0x3"
+
+                },
+            };
+
+            return View(modelList);
         }
     }
 }
