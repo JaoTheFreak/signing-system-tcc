@@ -5,13 +5,9 @@ namespace Signing.System.Tcc.Domain.RecordAggregate
 {
     public class Record
     {
-        public Record(User recordOwner, string transactionHash, decimal transactionFee, string midiaHash, string midiaDescription,
+        public Record(string transactionHash, decimal transactionFee, string midiaHash, string midiaDescription,
             string midiaName, string midiaResolution, string midiaExtension, int midiaSizeByte, string midiaUrl)
         {
-            User = recordOwner;
-
-            UserId = User.Id;
-
             TransactionHash = transactionHash;
 
             TransactionFee = transactionFee;
@@ -47,6 +43,19 @@ namespace Signing.System.Tcc.Domain.RecordAggregate
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAte { get; private set; }
 
-        public readonly User User;
+        private User _user;
+
+        public User User
+        {
+            get => _user;
+            set
+            {
+                if (_user == null)
+                {
+                    _user = value;
+                    UserId = _user.Id;
+                }
+            }
+        }
     }
 }
