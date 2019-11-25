@@ -13,7 +13,7 @@ namespace Signing.System.Tcc.Data.Migrations
                 startValue: 12L);
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false, defaultValueSql: "nextval('\"User\"')"),
@@ -28,11 +28,11 @@ namespace Signing.System.Tcc.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Record",
+                name: "Records",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -52,28 +52,28 @@ namespace Signing.System.Tcc.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Record", x => x.Id);
+                    table.PrimaryKey("PK_Records", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Record_User_UserId",
+                        name: "FK_Records_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Record_UserId",
-                table: "Record",
+                name: "IX_Records_UserId",
+                table: "Records",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Record");
+                name: "Records");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
 
             migrationBuilder.DropSequence(
                 name: "User");

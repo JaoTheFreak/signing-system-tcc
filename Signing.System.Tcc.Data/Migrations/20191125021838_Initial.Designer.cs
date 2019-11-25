@@ -10,7 +10,7 @@ using Signing.System.Tcc.Data.Context;
 namespace Signing.System.Tcc.Data.Migrations
 {
     [DbContext(typeof(SigningContext))]
-    [Migration("20191125021543_Initial")]
+    [Migration("20191125021838_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace Signing.System.Tcc.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Record");
+                    b.ToTable("Records");
                 });
 
             modelBuilder.Entity("Signing.System.Tcc.Domain.UserAggregate.User", b =>
@@ -89,7 +89,7 @@ namespace Signing.System.Tcc.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Signing.System.Tcc.Domain.RecordAggregate.Record", b =>

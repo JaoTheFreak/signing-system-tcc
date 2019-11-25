@@ -57,7 +57,7 @@ namespace Signing.System.Tcc.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Record");
+                    b.ToTable("Records");
                 });
 
             modelBuilder.Entity("Signing.System.Tcc.Domain.UserAggregate.User", b =>
@@ -87,7 +87,7 @@ namespace Signing.System.Tcc.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Signing.System.Tcc.Domain.RecordAggregate.Record", b =>

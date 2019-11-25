@@ -15,6 +15,9 @@ namespace Signing.System.Tcc.Data.EntityConfig
 
             builder.Property(s => s.CreatedAt)
                     .HasDefaultValueSql("NOW()");
+
+            ////Map to our table
+            builder.ToTable("Records");
         }
     }
 }
