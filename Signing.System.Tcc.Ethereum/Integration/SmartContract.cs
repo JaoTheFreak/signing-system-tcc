@@ -1,12 +1,13 @@
 ﻿using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
+using Signing.System.Tcc.Domain.EtherAggregate;
 using Signing.System.Tcc.Ethereum.Interfaces;
 using Signing.System.Tcc.Ethereum.SmartContract;
 using Signing.System.Tcc.Ethereum.SmartContract.ContractDefinition;
-using System;
-using System.Threading.Tasks;
 using Signing.System.Tcc.Helpers;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Signing.System.Tcc.Ethereum.Integration
 {
@@ -39,21 +40,44 @@ namespace Signing.System.Tcc.Ethereum.Integration
         {
             try
             {
-                var q = new RegisterDocumentFunction
+                var registerDocumentFunction = new RegisterDocumentFunction
                 {
                     ImageHash = hashImage,
                     AuthorDocument = authorDocument,
                     FromAddress = _userAccountAddress
                 };
 
-                var oi = await _myContract.ContractHandler.EstimateGasAsync(q);
+                var priceInGas = await _myContract.ContractHandler.EstimateGasAsync(registerDocumentFunction);
 
-                var eoq = await _myContract.RegisterDocumentRequestAndWaitForReceiptAsync(q);
+                registerDocumentFunction.GasPrice = priceInGas;
+
+                var eoq = await _myContract.RegisterDocumentRequestAndWaitForReceiptAsync(registerDocumentFunction);
             }
             catch (Exception ex)
             {
 
                 return;
+            }
+        }
+
+        public async Task<decimal> EstimateTransactionPriceAsync(string authorDocument, string hashImage, EtherValueObject ether)
+        {
+            try
+            {
+                var registerDocumentFunction = new RegisterDocumentFunction
+                {
+                    ImageHash = hashImage,
+                    AuthorDocument = authorDocument,
+                    FromAddress = _userAccountAddress
+                };
+
+                var priceInGas = await _myContract.ContractHandler.EstimateGasAsync(registerDocumentFunction);
+
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
             }
         }
 

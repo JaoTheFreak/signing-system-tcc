@@ -35,57 +35,32 @@
 </head>
 
 <body>
-    <h1>Registrar nova imagem</h1>
+    <h1>Registrar nova Image</h1>
 
     <hr />
     <div class="row">
 
         <div class="col-md-5 card-body">
-            <form asp-action="NewDocument">
+            <form asp-action="NewDocument" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger form-group"></div>
-
-                @*<div class="custom-file mb-3">
-                    <input asp-for="ImagePath" type="file" class="custom-file-input" id="exampleInputFile">
-                    <label asp-for="ImagePath" for="exampleInputFile" class="control-label custom-file-label">Selecione a imagem</label>
-                    <span asp-validation-for="AuthorImageName" class="text-danger"></span>
-                </div>*@
-                <div class="form-group">
-                    <label for="exampleFormControlFile1">Imagem</label>
-                    <input type="file" class="form-control-file" id="imagem">
-                </div>
-                <div class="form-group">
-                    <label asp-for="AuthorImageName" class="control-label"></label>
-                    <input asp-for="AuthorImageName" class="form-control" />
-                    <span asp-validation-for="AuthorImageName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AuthoDocumentId" class="control-label"></label>
-                    <input asp-for="AuthoDocumentId" class="form-control" />
-                    <span asp-validation-for="AuthoDocumentId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AuthoDocumentType" class="control-label"></label>
-                    <input asp-for="AuthoDocumentType" class="form-control" />
-                    <span asp-validation-for="AuthoDocumentType" class="text-danger"></span>
-                </div>
                 <div class="form-group">
                     <label asp-for="DocumentName" class="control-label"></label>
                     <input asp-for="DocumentName" class="form-control" />
                     <span asp-validation-for="DocumentName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="DocumentFormat" class="control-label"></label>
-                    <input asp-for="DocumentFormat" class="form-control" />
-                    <span asp-validation-for="DocumentFormat" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="DocumentSize" class="control-label"></label>
-                    <input asp-for="DocumentSize" class="form-control" />
-                    <span asp-validation-for="DocumentSize" class="text-danger"></span>
+                    <label for="Image">Image</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input id="imageHash" hidden />
+                            <input asp-for="Image" type="file" class="custom-file-input">
+                            <label asp-for="Image" class="custom-file-label">Selecione uma Image</label>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label asp-for="DocumentDescription" class="control-label"></label>
-                    <textarea asp-for="DocumentDescription" class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                    <textarea asp-for="DocumentDescription" class="form-control" rows="3" placeholder="Insira uma breve descrição da obra."></textarea>
                     <span asp-validation-for="DocumentDescription" class="text-danger"></span>
                 </div>
                 <div id="confirm" class="callout callout-warning" hidden>
@@ -104,7 +79,7 @@
                             <button id="cancelar" type="button" class="btn btn-block btn-danger btn-lg mb-3">Cancelar</button>
                         </div>
                         <div class="col">
-                            <button id="enviar" type="button" class="btn btn-block btn-info btn-lg mb-3 float-right" disabled>Enviar</button>
+                            <button id="enviar" type="submit" class="btn btn-block btn-info btn-lg mb-3 float-right">Enviar</button>
                         </div>
                     </div>
                 </div>
@@ -117,41 +92,91 @@
 
 </body>
 
-<!-- Bootstrap 4 -->
-<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/plugins/jquery/jquery.min.js"></script>
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+@*<script src="~/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>*@
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+<script src="~/js/adminlte.min.js"></script>
+
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/crypto-js/core.js"></script>
+<script src="~/lib/crypto-js/sha256.js"></script>
 
 <script>
 
     $(document).ready(function () {
+        bsCustomFileInput.init();
 
-        $('#imagem').change(function () {
+        $('#Image').on("change", function () {
 
-            $('#imgshow').attr("src", $('#imagem').val());
-            
+            var imageToHash = this.files[0];
 
-            var url = "@Url.Action("Quote", "Document")";           
-            $.ajax({
-                method: "POST",
-                url: url,
-                data: {
-                    imageHashToValidate: $('#imagem').val()
-                },
-                beforeSend: function () {
+            var reader = new FileReader();
 
-                }
-            })
-                .done(function (data) {
-                $('#cost').text(data.gasPrice);
-                $('#confirm').removeAttr('hidden');
+            reader.onload = function (event) {
 
-            })
+                var data = event.target.result;
+
+                var hash = CryptoJS.SHA256(data);
+                                
+                $('#imgshow').attr("src", $('#Image').val());
+
+                var url = "@Url.Action("Quote", "Document")";
+
+                $.post(url, {imageHashToQuote: hash.toString()}).done(function (data) {
+                    $('#cost').text(data.gasPrice);
+                    $('#confirm').removeAttr('hidden');
+                })
                 .fail(function (jqXHR, textStatus, data) {
                     alert(data);
                     $('#enviar').attr("disabled", true);
-            });
+                });
 
+                //$.ajax({
+                //    dataType: 'text',
+                //    contentType: 'application/json; charset=utf-8',
+                //    method: 'POST',
+                //    url: url,
+                //    data: hash.toString()                  
+                //})
+                //.done(function (data) {
+                //    $('#cost').text(data.gasPrice);
+                //    $('#confirm').removeAttr('hidden');
+                //})
+                //.fail(function (jqXHR, textStatus, data) {
+                //    alert(data);
+                //    $('#enviar').attr("disabled", true);
+                //});
+            };
+
+            reader.readAsBinaryString(imageToHash);
         });
+
+        @*$('#Image').change(function () {
+
+            $('#imgshow').attr("src", $('#Image').val());
+
+            var url = "@Url.Action("Quote", "Document")";
+
+            var bodyRequest = JSON.stringify({ "imageHashToQuote": $('#imageHash').val() });
+
+            console.log(bodyRequest);
+
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: bodyRequest
+            })
+            .done(function (data) {
+            $('#cost').text(data.gasPrice);
+            $('#confirm').removeAttr('hidden');
+
+            })
+            .fail(function (jqXHR, textStatus, data) {
+                alert(data);
+                $('#enviar').attr("disabled", true);
+            });
+        });*@
 
         $('#checkboxSuccess1').change(function () {
             if ($('#checkboxSuccess1').is(':checked')) {
