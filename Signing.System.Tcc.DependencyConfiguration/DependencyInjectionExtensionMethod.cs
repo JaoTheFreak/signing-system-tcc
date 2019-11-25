@@ -6,6 +6,7 @@ using Signing.System.Tcc.Data;
 using Signing.System.Tcc.Data.Context;
 using Signing.System.Tcc.Data.Repositories;
 using Signing.System.Tcc.Domain.EtherAggregate;
+using Signing.System.Tcc.Domain.RecordAggregate;
 using Signing.System.Tcc.Domain.UnitOfWork;
 using Signing.System.Tcc.Domain.UserAggregate;
 using Signing.System.Tcc.Ethereum.Integration;
@@ -32,6 +33,11 @@ namespace Signing.System.Tcc.DependencyConfiguration
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IUserAppService, UserAppService>();
             service.AddScoped<IUserFactory, UserFactory>();
+
+            service.AddScoped<IRecordRepository, RecordRepository>();
+            service.AddScoped<IRecordService, RecordService>();
+            service.AddScoped<IRecordAppService, RecordAppService>();
+            service.AddScoped<IRecordFactory, RecordFactory>();
 
         }
     }

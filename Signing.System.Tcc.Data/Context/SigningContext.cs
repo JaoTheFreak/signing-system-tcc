@@ -1,17 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using Signing.System.Tcc.Data.EntityConfig;
+using Signing.System.Tcc.Domain.RecordAggregate;
 using Signing.System.Tcc.Domain.UserAggregate;
+using Signing.System.Tcc.Helpers;
 using System;
 using System.Linq;
-using Signing.System.Tcc.Helpers;
-using System.Threading.Tasks;
 using System.Threading;
-using Signing.System.Tcc.Data.EntityConfig;
+using System.Threading.Tasks;
 
 namespace Signing.System.Tcc.Data.Context
 {
     public class SigningContext : DbContext
     {
         DbSet<User> Users { get; set; }
+        DbSet<Record> Records { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -43,6 +45,7 @@ namespace Signing.System.Tcc.Data.Context
 
             #region Applying Entity Config
             modelBuilder.ApplyConfiguration(new UserEntityConfig());
+            modelBuilder.ApplyConfiguration(new RecordEntityConfig());
             #endregion
 
             #region Corretions in Auto Increment Ids

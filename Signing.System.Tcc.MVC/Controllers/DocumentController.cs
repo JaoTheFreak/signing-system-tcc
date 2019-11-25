@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Signing.System.Tcc.Application.Interfaces;
 using Signing.System.Tcc.Domain.EtherAggregate;
 using Signing.System.Tcc.Ethereum.Interfaces;
 using Signing.System.Tcc.MVC.ViewModels.Document;
-using System;
-using System.Threading.Tasks;
 using System.Linq;
-using System.IO;
-using System.Globalization;
-using Signing.System.Tcc.Application.Interfaces;
+using System.Threading.Tasks;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
@@ -29,7 +25,20 @@ namespace Signing.System.Tcc.MVC.Controllers
         {
             var registeredImage = await _smartContract.VerifyImageByHashAsync(imageHashToValidate);
 
+            var errorCode = 0;
 
+            var errorMessage = string.Empty;
+
+            if (string.IsNullOrEmpty(registeredImage.ImageHash))
+            {
+                errorCode = 404;
+
+                errorMessage = "Rercord Not Found";
+            }
+            else
+            {
+
+            }
 
             var jsonToReturn = new 
             { 
@@ -42,23 +51,33 @@ namespace Signing.System.Tcc.MVC.Controllers
                 documentName = "Nome do documento",
                 documentFormat = ".jpg",
                 documentSize = "500x500 px",
-                documentDescription = "Fotografia seu qualquer"
-
+                documentDescription = "Fotografia seu qualquer",
+                error = new
+                {
+                    code = errorCode,
+                    message = errorMessage
+                }
             };
 
             return Json(jsonToReturn);
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> NewDocument([FromServices] ISmartContract smartContract)
+        public IActionResult NewDocument()
         {
-            //var doc = "06914456992";
+            return View();
+        }
 
-            //var hash = "9129043929f1309a95ad8b5039185c92b2fff3913d5ed3872a414e266cb94686";
+        [HttpPost, ActionName("NewDocument")]
+        public async Task<IActionResult> NewDocumentPost(DocumentRegisterViewModel newDocument)
+        {
+            if (!ModelState.IsValid) // ERRO
+                return View();
 
-            //await smartContract.VerifyImageByAuthorDocumentAsync(doc);
+            var registerFound = await _smartContract.VerifyImageByHashAsync("");
 
-            ////await smartContract.RegisterImageAsync(doc, hash);            
+            if (!string.IsNullOrEmpty(registerFound.ImageHash)) //ERRO
+                return View();
 
             return View();
         }
@@ -78,13 +97,7 @@ namespace Signing.System.Tcc.MVC.Controllers
             };
 
             return Json(jsonToReturn);
-        }
-
-        [HttpPost, ActionName("NewDocument")]
-        public IActionResult NewDocumentPost(DocumentRegisterViewModel newDocument)
-        {
-            return View();
-        }
+        }        
 
         [HttpGet]
         public IActionResult Index([FromServices] IEtherFactory etherFactory)
