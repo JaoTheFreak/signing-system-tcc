@@ -1,4 +1,5 @@
 ﻿@model Signing.System.Tcc.MVC.ViewModels.Document.DocumentRegisterViewModel
+@await Component.InvokeAsync("NToastNotify")
 
 @{
     ViewData["Title"] = "NewDocument";
@@ -41,7 +42,7 @@
     <div class="row">
 
         <div class="col-md-5 card-body">
-            <form asp-action="NewDocument" method="post">
+            <form asp-action="NewDocument" enctype="multipart/form-data" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger form-group"></div>
                 <div class="form-group">
                     <label asp-for="DocumentName" class="control-label"></label>
@@ -51,10 +52,11 @@
                 <div class="form-group">
                     <label for="Image">Image</label>
                     <div class="input-group">
+                        <input asp-for="ImageHash" type="text" hidden>
+                        <input asp-for="Image" type="file">
                         <div class="custom-file">
-                            <input id="imageHash" hidden />
-                            <input asp-for="Image" type="file" class="custom-file-input">
-                            <label asp-for="Image" class="custom-file-label">Selecione uma Image</label>
+                            @*<input asp-for="Image" type="file" class="custom-file-input">*@
+                            <label asp-for="Image" class="custom-file-label">Selecione uma Image</label>xxx
                         </div>
                     </div>
                 </div>
@@ -102,6 +104,13 @@
 <script src="~/lib/crypto-js/core.js"></script>
 <script src="~/lib/crypto-js/sha256.js"></script>
 
+<!-- BEGIN TOASTR AUX FIELDS -->
+<input type="hidden" id="success" value="@TempData["success"]" />
+<input type="hidden" id="info" value="@TempData["info"]" />
+<input type="hidden" id="warning" value="@TempData["warning"]" />
+<input type="hidden" id="error" value="@TempData["error"]" />
+<!-- END TOASTR AUX FIELDS -->
+
 <script>
 
     $(document).ready(function () {
@@ -118,8 +127,10 @@
                 var data = event.target.result;
 
                 var hash = CryptoJS.SHA256(data);
-                                
+
                 $('#imgshow').attr("src", $('#Image').val());
+
+                $('#ImageHash').val(hash.toString());
 
                 var url = "@Url.Action("Quote", "Document")";
 
@@ -128,56 +139,13 @@
                     $('#confirm').removeAttr('hidden');
                 })
                 .fail(function (jqXHR, textStatus, data) {
-                    alert(data);
                     $('#enviar').attr("disabled", true);
                 });
-
-                //$.ajax({
-                //    dataType: 'text',
-                //    contentType: 'application/json; charset=utf-8',
-                //    method: 'POST',
-                //    url: url,
-                //    data: hash.toString()                  
-                //})
-                //.done(function (data) {
-                //    $('#cost').text(data.gasPrice);
-                //    $('#confirm').removeAttr('hidden');
-                //})
-                //.fail(function (jqXHR, textStatus, data) {
-                //    alert(data);
-                //    $('#enviar').attr("disabled", true);
-                //});
             };
 
             reader.readAsBinaryString(imageToHash);
         });
-
-        @*$('#Image').change(function () {
-
-            $('#imgshow').attr("src", $('#Image').val());
-
-            var url = "@Url.Action("Quote", "Document")";
-
-            var bodyRequest = JSON.stringify({ "imageHashToQuote": $('#imageHash').val() });
-
-            console.log(bodyRequest);
-
-            $.ajax({
-                method: "POST",
-                url: url,
-                data: bodyRequest
-            })
-            .done(function (data) {
-            $('#cost').text(data.gasPrice);
-            $('#confirm').removeAttr('hidden');
-
-            })
-            .fail(function (jqXHR, textStatus, data) {
-                alert(data);
-                $('#enviar').attr("disabled", true);
-            });
-        });*@
-
+                
         $('#checkboxSuccess1').change(function () {
             if ($('#checkboxSuccess1').is(':checked')) {
                 $('#enviar').attr("disabled", false);

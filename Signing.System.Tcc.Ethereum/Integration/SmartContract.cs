@@ -1,6 +1,8 @@
-﻿using Nethereum.Web3;
+﻿using Nethereum.Hex.HexTypes;
+using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
 using Signing.System.Tcc.Domain.EtherAggregate;
+using Signing.System.Tcc.Domain.RecordAggregate;
 using Signing.System.Tcc.Ethereum.Interfaces;
 using Signing.System.Tcc.Ethereum.SmartContract;
 using Signing.System.Tcc.Ethereum.SmartContract.ContractDefinition;
@@ -36,7 +38,7 @@ namespace Signing.System.Tcc.Ethereum.Integration
             _myContract = new SigningSystemContractService(new Web3(account, projectEndPoint), _contractAddress);
         }
 
-        public async Task RegisterImageAsync(string authorDocument, string hashImage)
+        public async Task<(string txHash, decimal txFee, bool txSuccess)> RegisterImageAsync(string authorDocument, string hashImage)
         {
             try
             {
@@ -49,15 +51,29 @@ namespace Signing.System.Tcc.Ethereum.Integration
 
                 var priceInGas = await _myContract.ContractHandler.EstimateGasAsync(registerDocumentFunction);
 
-                registerDocumentFunction.GasPrice = priceInGas;
+                registerDocumentFunction.Gas = priceInGas;
+                                
+                var receiptFromRegisterDocument = await _myContract.RegisterDocumentRequestAndWaitForReceiptAsync(registerDocumentFunction);
 
-                var eoq = await _myContract.RegisterDocumentRequestAndWaitForReceiptAsync(registerDocumentFunction);
+                var totalEtherCost = ConvertGasToEther(receiptFromRegisterDocument.GasUsed);
+                                               
+                (string txHash, decimal txFee, bool txSuccess) result = (receiptFromRegisterDocument.TransactionHash, totalEtherCost, !receiptFromRegisterDocument.Status.Value.IsZero);
+
+                return result;
             }
             catch (Exception ex)
             {
-
-                return;
+                return (null, -1,  false);
             }
+        }
+
+        private decimal ConvertGasToEther(HexBigInteger gas)
+        {
+            var weiValue = Nethereum.Util.UnitConversion.Convert.ToWei(gas, Nethereum.Util.UnitConversion.EthUnit.Gwei);
+
+            var etherValue = Nethereum.Util.UnitConversion.Convert.FromWei(weiValue, Nethereum.Util.UnitConversion.EthUnit.Ether);
+
+            return etherValue;
         }
 
         public async Task<decimal> EstimateTransactionPriceAsync(string authorDocument, string hashImage, EtherValueObject ether)
@@ -73,7 +89,11 @@ namespace Signing.System.Tcc.Ethereum.Integration
 
                 var priceInGas = await _myContract.ContractHandler.EstimateGasAsync(registerDocumentFunction);
 
-                return 1;
+                var etherCost = ConvertGasToEther(priceInGas);
+
+                var totalCost = decimal.Round(ether.Amount * etherCost, 2);
+
+                return totalCost;
             }
             catch (Exception ex)
             {

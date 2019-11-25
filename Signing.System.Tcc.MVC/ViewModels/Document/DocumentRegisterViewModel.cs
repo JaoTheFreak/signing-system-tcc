@@ -17,8 +17,13 @@ namespace Signing.System.Tcc.MVC.ViewModels.Document
         [DataType(DataType.Text)]
         public string DocumentDescription { get; set; }
 
+        [DisplayName("Hash da imagem")]
+        [Required]
+        [DataType(DataType.Text)]
+        public string ImageHash { get; set; }
+
         [DisplayName("Imagem")]
-        [Required(ErrorMessage = "O campo {0} é obrigatório!", AllowEmptyStrings = false)]
+        [Required]
         [DataType(DataType.Upload)]
         public IFormFile Image { get; set; }
 
