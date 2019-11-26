@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Signing.System.Tcc.Applicat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Signing.System.Tcc.Helpers", "Signing.System.Tcc.Helpers\Signing.System.Tcc.Helpers.csproj", "{F9CFE288-69F5-4DFA-9939-4CC158863A1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signing.System.Tcc.Ethereum", "Signing.System.Tcc.Ethereum\Signing.System.Tcc.Ethereum.csproj", "{A1FFFEED-8392-4EB0-8EED-A720D30D6135}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Signing.System.Tcc.Ethereum", "Signing.System.Tcc.Ethereum\Signing.System.Tcc.Ethereum.csproj", "{A1FFFEED-8392-4EB0-8EED-A720D30D6135}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

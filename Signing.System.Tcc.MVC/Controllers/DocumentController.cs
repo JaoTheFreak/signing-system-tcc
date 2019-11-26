@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Security.Claims;
 using System;
+using System.Net;
+using System.Globalization;
+using Signing.System.Tcc.MVC.Interfaces;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
@@ -46,42 +49,40 @@ namespace Signing.System.Tcc.MVC.Controllers
         public async Task<IActionResult> Validate([FromQuery] string imageHashToValidate)
         {
             var registeredImage = await _smartContract.VerifyImageByHashAsync(imageHashToValidate);
-
-            var errorCode = 0;
-
-            var errorMessage = string.Empty;
-
+            
             if (string.IsNullOrEmpty(registeredImage.ImageHash))
             {
-                errorCode = 404;
-
-                errorMessage = "Rercord Not Found";
+                return NotFound();
             }
             else
             {
-
-            }
-
-            var jsonToReturn = new
-            {
-                imagePath = "https://pbs.twimg.com/profile_images/955211651371995137/3iIrG83t.jpg",
-                imageHash = $"0x{registeredImage.ImageHash}",
-                transactionId = "66x80c43e8380daa8213cac07f98f7909ee0b224ddbc7d1571591dbc42e3a57f",
-                authorImageName = "Maycon",
-                authoDocumentId = string.Format("###.###.###-##", registeredImage.AuthorDocument),
-                imageRegisterDate = registeredImage.CreatedAt.ToString("dd/mm/yyyy HH:MM:ss"),
-                documentName = "Nome do documento",
-                documentFormat = ".jpg",
-                documentSize = "500x500 px",
-                documentDescription = "Fotografia seu qualquer",
-                error = new
+                try
                 {
-                    code = errorCode,
-                    message = errorMessage
-                }
-            };
+                    var recordFromDb = _recordAppService.FirstOrDefault(r => r.MidiaHash.Equals(registeredImage.ImageHash) && r.User.DocumentNumber.Equals(registeredImage.AuthorDocument));
 
-            return Json(jsonToReturn);
+                    recordFromDb.User = _userAppService.FirstOrDefault(u => u.Id == recordFromDb.UserId);
+
+                    var jsonToReturn = new
+                    {
+                        imagePath = recordFromDb.MidiaUrl,
+                        imageHash = registeredImage.ImageHash,
+                        transactionId = recordFromDb.TransactionHash,
+                        authorImageName = recordFromDb.User.DisplayName,
+                        authoDocumentId = Convert.ToUInt64(registeredImage.AuthorDocument).ToString(@"000\.000\.000\-00"),
+                        imageRegisterDate = registeredImage.CreatedAt.ToString("dd/mm/yyyy HH:MM:ss", new CultureInfo("pt-BR")),
+                        documentName = recordFromDb.MidiaName,
+                        documentFormat = recordFromDb.MidiaExtension,
+                        documentSize = $"{recordFromDb.MidiaResolution} px",
+                        documentDescription = recordFromDb.MidiaDescription
+                    };
+
+                    return Json(jsonToReturn);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode((int) HttpStatusCode.BadRequest);
+                }
+            }
         }
 
         [HttpGet]
@@ -91,7 +92,7 @@ namespace Signing.System.Tcc.MVC.Controllers
         }
 
         [HttpPost, ActionName("NewDocument")]
-        public async Task<IActionResult> NewDocumentPost(DocumentRegisterViewModel newDocument)
+        public async Task<IActionResult> NewDocumentPost([FromServices] IEtherFactory etherFactory, [FromServices] IStorageService _storageService, DocumentRegisterViewModel newDocument)
         {
             if (!ModelState.IsValid)
             {
@@ -145,7 +146,7 @@ namespace Signing.System.Tcc.MVC.Controllers
                     return View();
                 }
 
-                var transactionInfo = await _smartContract.RegisterImageAsync(authorDocument, newDocument.ImageHash);
+                var transactionInfo = await _smartContract.RegisterImageAsync(authorDocument, newDocument.ImageHash, await etherFactory.CreateEtherAsync());
 
                 if (transactionInfo.txFee == -1)
                 {
@@ -163,11 +164,11 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                 Record newRecord;
 
-                //TODO: VERIFICAR UPLOAD PARA GOOGLE CLOUD OU OUTRO LUGAR
+                var imageLink = await _storageService.UploadImageAsync(newDocument.Image, newDocument.ImageHash);
 
                 using (var image = Image.FromStream(newDocument.Image.OpenReadStream()))
                 {    
-                    newRecord = _recordFactory.Create(transactionInfo.txHash, transactionInfo.txFee, $"0x{newDocument.ImageHash}", newDocument.DocumentDescription, newDocument.DocumentName, $"{image.PhysicalDimension.Width}x{image.PhysicalDimension.Height}", newDocument.Image.ContentType.Split('/')[1], newDocument.Image.Length, "");
+                    newRecord = _recordFactory.Create(transactionInfo.txHash, transactionInfo.txFee, $"0x{newDocument.ImageHash}", newDocument.DocumentDescription, newDocument.DocumentName, $"{image.PhysicalDimension.Width}x{image.PhysicalDimension.Height}", newDocument.Image.ContentType.Split('/')[1], newDocument.Image.Length, imageLink);
                 }
 
                 newRecord.User = userFromDatabase;

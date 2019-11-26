@@ -38,7 +38,7 @@ namespace Signing.System.Tcc.Ethereum.Integration
             _myContract = new SigningSystemContractService(new Web3(account, projectEndPoint), _contractAddress);
         }
 
-        public async Task<(string txHash, decimal txFee, bool txSuccess)> RegisterImageAsync(string authorDocument, string hashImage)
+        public async Task<(string txHash, decimal txFee, bool txSuccess)> RegisterImageAsync(string authorDocument, string hashImage, EtherValueObject ether)
         {
             try
             {
@@ -56,8 +56,10 @@ namespace Signing.System.Tcc.Ethereum.Integration
                 var receiptFromRegisterDocument = await _myContract.RegisterDocumentRequestAndWaitForReceiptAsync(registerDocumentFunction);
 
                 var totalEtherCost = ConvertGasToEther(receiptFromRegisterDocument.GasUsed);
-                                               
-                (string txHash, decimal txFee, bool txSuccess) result = (receiptFromRegisterDocument.TransactionHash, totalEtherCost, !receiptFromRegisterDocument.Status.Value.IsZero);
+
+                var totalCost = decimal.Round(ether.Amount * totalEtherCost, 2);
+
+                (string txHash, decimal txFee, bool txSuccess) result = (receiptFromRegisterDocument.TransactionHash, totalCost, !receiptFromRegisterDocument.Status.Value.IsZero);
 
                 return result;
             }

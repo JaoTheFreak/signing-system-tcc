@@ -133,7 +133,7 @@
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                            <a id="imgDownload" href="" download="imagem" type="button" class="btn btn-primary btn-info">Salvar Imagem</a>
+                            <a id="imgDownloadButton" href="" download="" type="button" class="btn btn-primary btn-info">Salvar Imagem</a>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -181,7 +181,7 @@
 
                 console.log(hash.toString());
 
-                $('#hashField').val(hash.toString());
+                $('#hashField').val("0x"+hash.toString());
 
                 $("#validar-img").click();
             };
@@ -221,6 +221,7 @@
                     $('#documentDescription').text(data.documentDescription);
                     $('#imagePath').attr("src", data.imagePath);
                     $('#imgDownloadButton').attr("href", data.imagePath);
+                    $('#imgDownloadButton').attr("download", data.imagePath);
 
                     console.log(data);
                 })

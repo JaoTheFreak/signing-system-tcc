@@ -1623,6 +1623,8 @@
 
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis" Version="1.42.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.12" />
@@ -3307,6 +3309,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Signing.System.Tcc.DependencyConfiguration\Signing.System.Tcc.DependencyConfiguration.csproj" />
     <ProjectReference Include="..\Signing.System.Tcc.Helpers\Signing.System.Tcc.Helpers.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="google-app-credentials.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 

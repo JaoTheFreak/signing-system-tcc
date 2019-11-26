@@ -130,11 +130,11 @@
 
                 $('#imgshow').attr("src", $('#Image').val());
 
-                $('#ImageHash').val(hash.toString());
+                $('#ImageHash').val("0x" + hash.toString());
 
                 var url = "@Url.Action("Quote", "Document")";
 
-                $.post(url, {imageHashToQuote: hash.toString()}).done(function (data) {
+                $.post(url, {imageHashToQuote: "0x" + hash.toString()}).done(function (data) {
                     $('#cost').text(data.gasPrice);
                     $('#confirm').removeAttr('hidden');
                 })

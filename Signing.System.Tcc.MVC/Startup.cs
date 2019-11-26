@@ -37,6 +37,7 @@ namespace Signing.System.Tcc.MVC
             }, Environment.GetEnvironmentVariable("COINBASE_URL_API"));
 
             services.AddScoped<IAuthenticantionService, AuthService>();
+            services.AddScoped<IStorageService, GoogleStorageService>(p => new GoogleStorageService(Environment.GetEnvironmentVariable("BUCKET_NAME")));
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -87,14 +88,14 @@ namespace Signing.System.Tcc.MVC
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            //using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    using (var context = scope.ServiceProvider.GetService<DbContext>())
-            //    {
-            //        context.Database.Migrate();
-            //        context.Database.ExecuteSqlCommand("create extension if not exists unaccent;");
-            //    }
-            //}
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (var context = scope.ServiceProvider.GetService<DbContext>())
+                {
+                    context.Database.Migrate();
+                    context.Database.ExecuteSqlCommand("create extension if not exists unaccent;");
+                }
+            }
 
             if (env.IsDevelopment())
             {
