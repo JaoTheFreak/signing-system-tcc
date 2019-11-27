@@ -42,7 +42,7 @@ namespace Signing.System.Tcc.MVC.Controllers
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
 
-            return RedirectToAction("Home", "Index");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]

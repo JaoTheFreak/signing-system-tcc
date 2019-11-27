@@ -56,18 +56,21 @@
 
         <div id="validar-imagem" class="pt-xl-5 border card p-5 ">
             <div id="validar-imagem-options">
-                <div class="row justify-content-md-center pt-xl-3">
-                    <div class="col-sm-4">
-                        <div class="row justify-content-md-center">
-                            <div class="col-sm-6">
-                                <a asp-controller="Account" asp-action="Register" id="registrar" role="button" class="btn btn-block btn-info btn-lg mb-3">Novo Usuário</a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a asp-controller="Account" asp-action="Login" id="logar" role="button" class="btn btn-block btn-info btn-lg mb-3">Logar</a>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div class="row justify-content-md-center pt-xl-3">
+                        <div class="col-sm-4">
+                            <div class="row justify-content-md-center">
+                                <div class="col-sm-6">
+                                    <a asp-controller="Account" asp-action="Register" id="registrar" role="button" class="btn btn-block btn-info btn-lg mb-3">Novo Usuário</a>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a asp-controller="Account" asp-action="Login" id="logar" role="button" class="btn btn-block btn-info btn-lg mb-3">Logar</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
                 <div class="row justify-content-md-center pt-xl-5">
                     <div class="text-center font-weight-bold callout callout-info">
                         Valide a autoria de uma imagem informando o hash obtido na transação ou faça o upload da imagem original registrada na blockchain
