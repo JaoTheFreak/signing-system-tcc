@@ -1,5 +1,4 @@
 ﻿@model Signing.System.Tcc.MVC.ViewModels.Document.DocumentRegisterViewModel
-@await Component.InvokeAsync("NToastNotify")
 
 @{
     ViewData["Title"] = "NewDocument";
@@ -36,7 +35,7 @@
 </head>
 
 <body>
-    <h1>Registrar nova Image</h1>
+    <h1>Registrar nova Imagem</h1>
 
     <hr />
     <div class="row">
@@ -50,14 +49,10 @@
                     <span asp-validation-for="DocumentName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Image">Image</label>
+                    <label for="Image">Imagem</label>
                     <div class="input-group">
                         <input asp-for="ImageHash" type="text" hidden>
-                        <input asp-for="Image" type="file">
-                        <div class="custom-file">
-                            @*<input asp-for="Image" type="file" class="custom-file-input">*@
-                            <label asp-for="Image" class="custom-file-label">Selecione uma Image</label>xxx
-                        </div>
+                        <input asp-for="Image" type="file">                       
                     </div>
                 </div>
                 <div class="form-group">
@@ -88,7 +83,7 @@
             </form>
         </div>
         <div class="col-md-5 card-body">
-            <img id="imgshow" src="" width="300" />
+            <img id="imgshow" src="" width="300"/>
         </div>
     </div>
 
@@ -104,17 +99,14 @@
 <script src="~/lib/crypto-js/core.js"></script>
 <script src="~/lib/crypto-js/sha256.js"></script>
 
-<!-- BEGIN TOASTR AUX FIELDS -->
-<input type="hidden" id="success" value="@TempData["success"]" />
-<input type="hidden" id="info" value="@TempData["info"]" />
-<input type="hidden" id="warning" value="@TempData["warning"]" />
-<input type="hidden" id="error" value="@TempData["error"]" />
-<!-- END TOASTR AUX FIELDS -->
+
 
 <script>
 
     $(document).ready(function () {
         bsCustomFileInput.init();
+
+        $('#imgshow').hide();
 
         $('#Image').on("change", function () {
 
@@ -127,9 +119,7 @@
                 var data = event.target.result;
 
                 var hash = CryptoJS.SHA256(data);
-
-                $('#imgshow').attr("src", $('#Image').val());
-
+                
                 $('#ImageHash').val("0x" + hash.toString());
 
                 var url = "@Url.Action("Quote", "Document")";
@@ -142,6 +132,14 @@
                     $('#enviar').attr("disabled", true);
                 });
             };
+
+            reader.onloadend = function () {
+                $('#imgshow').attr("src", reader.result);
+
+                $('#imgshow').show();
+            }
+
+            reader.readAsDataURL(imageToHash);
 
             reader.readAsBinaryString(imageToHash);
         });

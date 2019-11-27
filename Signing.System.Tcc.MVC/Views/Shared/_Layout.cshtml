@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@await Component.InvokeAsync("NToastNotify")
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -40,11 +42,14 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Página Inicial</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Documentação</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Document" asp-action="Index">Minhas Imagens</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -59,7 +64,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-@*            &copy; 2019 - Signing.System.Tcc.MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
+            @*            &copy; 2019 - Signing.System.Tcc.MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
         </div>
     </footer>
 
@@ -80,8 +85,15 @@
                 crossorigin="anonymous"
                 integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
         </script>
-    </environment>   
-    
+    </environment>
+
     @RenderSection("Scripts", required: false)
+
+    <!-- BEGIN TOASTR AUX FIELDS -->
+    <input type="hidden" id="success" value="@TempData["success"]" />
+    <input type="hidden" id="info" value="@TempData["info"]" />
+    <input type="hidden" id="warning" value="@TempData["warning"]" />
+    <input type="hidden" id="error" value="@TempData["error"]" />
+    <!-- END TOASTR AUX FIELDS -->
 </body>
 </html>

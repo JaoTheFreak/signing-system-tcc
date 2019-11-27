@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Signing.System.Tcc.MVC.Models;
 using System.Diagnostics;
 
@@ -6,6 +7,7 @@ namespace Signing.System.Tcc.MVC.Controllers
 {
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();

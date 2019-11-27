@@ -225,39 +225,19 @@ namespace Signing.System.Tcc.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index([FromServices] IEtherFactory etherFactory)
+        public IActionResult Index()
         {
-
-            var modelList = new List<DocumentsRegisteredViewModel> {
-                new DocumentsRegisteredViewModel
-                {
-                    ArtName = "Foto Paisagem",
-                    RegisterDate = DateTime.Now,
-                    RegisterSuccessTrue = true,
-                    ImageUrl = "https://pbs.twimg.com/profile_images/955211651371995137/3iIrG83t.jpg",
-                    ImageHash = "0x1"
-
-
-                },
-                new DocumentsRegisteredViewModel
-                {
-                     ArtName = "Foto Rosto",
-                    RegisterDate = DateTime.Now,
-                    RegisterSuccessTrue = true,
-                    ImageUrl = "https://pbs.twimg.com/profile_images/955211651371995137/3iIrG83t.jpg",
-                    ImageHash = "0x2"
-
-                },
-                new DocumentsRegisteredViewModel
-                {
-                    ArtName = "Foto Ruas",
-                    RegisterDate = DateTime.Now,
-                    RegisterSuccessTrue = false,
-                    ImageUrl = "https://pbs.twimg.com/profile_images/955211651371995137/3iIrG83t.jpg",
-                    ImageHash = "0x3"
             var loggedUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.PrimarySid)).Value);
 
             var recordsFromDb = _recordAppService.Find(r => r.UserId == loggedUserId);
+
+            var modelList = recordsFromDb.Select(r => new DocumentsRegisteredViewModel {
+                ArtName = r.MidiaName,
+                RegisterDate = r.CreatedAt,
+                RegisterSuccessTrue = !string.IsNullOrEmpty(r.TransactionHash),
+                ImageUrl = r.MidiaUrl,
+                ImageHash = r.MidiaHash                
+            });
 
             return View(modelList);
         }

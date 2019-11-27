@@ -42,7 +42,7 @@ namespace Signing.System.Tcc.MVC.Controllers
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
 
-            return RedirectToAction("DashBoard", "Home");
+            return RedirectToAction("Home", "Index");
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
@@ -67,7 +67,7 @@ namespace Signing.System.Tcc.MVC.Controllers
                         return Redirect(returnUrl);
                     }
 
-                    return RedirectToAction("Dashboard", "Home");
+                    return RedirectToAction("Index", "Document");
                 }
 
                 _notificationService.AddErrorToastMessage("Dados incorretos!", new ToastrOptions
@@ -103,7 +103,7 @@ namespace Signing.System.Tcc.MVC.Controllers
         public IActionResult Logout()
         {
             if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Dashboard", "Home");
+                return RedirectToAction("Document", "Index");
 
             return RedirectToAction("Login");
         }

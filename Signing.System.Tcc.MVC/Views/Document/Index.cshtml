@@ -5,7 +5,7 @@
 }
 
 <h1>
-    Registro de Autoria em Blockchain
+   Imagens Registradas
 </h1>
 
         <section class="content">
@@ -102,7 +102,7 @@
                                                     <div type="text" class="btn btn-block btn-success btn-xs">Registrada</div>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-block btn-info" style="margin-left:10px, 10px" onclick="checkImageByHash(@item.ImageHash)">Validar</button>
+                                                    <button class="btn btn-block btn-info" style="margin-left:10px, 10px" onclick="checkImageByHash('@item.ImageHash')">Validar</button>
                                                 </td>
                                             </tr>
                                         }
@@ -196,6 +196,8 @@
         function checkImageByHash(imageHash) {
             var url = "@Url.Action("Validate", "Document")";
 
+            console.log(imageHash);
+
             $.ajax({
                 method: "GET",
                 url: url,
@@ -221,11 +223,9 @@
                     $('#imagePath').attr("src", data.imagePath);
                     $('#imgDownloadButton').attr("href", data.imagePath);
 
-                    console.log(data);
                 })
                 .fail(function (jqXHR, textStatus, data) {
-                    alert(data);
-                    $('#hashField').val("");
+
                 });
         }
 
