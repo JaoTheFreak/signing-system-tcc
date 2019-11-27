@@ -1,20 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using Signing.System.Tcc.Application.Interfaces;
 using Signing.System.Tcc.Domain.EtherAggregate;
 using Signing.System.Tcc.Domain.RecordAggregate;
 using Signing.System.Tcc.Ethereum.Interfaces;
+using Signing.System.Tcc.MVC.Interfaces;
 using Signing.System.Tcc.MVC.ViewModels.Document;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Security.Claims;
-using System;
-using System.Net;
 using System.Globalization;
-using Signing.System.Tcc.MVC.Interfaces;
+using System.Linq;
+using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Signing.System.Tcc.MVC.Controllers
 {
@@ -47,7 +46,7 @@ namespace Signing.System.Tcc.MVC.Controllers
             _unitOfWorkAppService = unitOfWorkAppService;
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Validate([FromQuery] string imageHashToValidate)
         {
             var registeredImage = await _smartContract.VerifyImageByHashAsync(imageHashToValidate);
