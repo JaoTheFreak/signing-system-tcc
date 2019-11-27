@@ -27,7 +27,8 @@
         "CONTRACT_ADDRESS": "0x7f7276D18888562cF42Ef2D1D609209911F87fD6",
         "BUCKET_NAME": "signing_system_tcc",
         "COINBASE_URL_API": "https://api.coinbase.com/v2/",
-        "GOOGLE_APPLICATION_CREDENTIALS": ".\\google-app-credentials.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": ".\\google-app-credentials.json",
+        "WALLET_PRIVATE_KEY": "0xD1042D34B0D0E04E5585D84657CC3CA738E7B735794D68AF66FF2AF132164B3B"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     },

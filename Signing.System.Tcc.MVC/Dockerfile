@@ -1,20 +1,5 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
+FROM microsoft/dotnet:2.2-sdk AS build-env
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
-WORKDIR /src
-COPY ["Signing.System.Tcc.MVC/Signing.System.Tcc.MVC.csproj", "Signing.System.Tcc.MVC/"]
-RUN dotnet restore "Signing.System.Tcc.MVC/Signing.System.Tcc.MVC.csproj"
 COPY . .
-WORKDIR "/src/Signing.System.Tcc.MVC"
-RUN dotnet build "Signing.System.Tcc.MVC.csproj" -c Release -o /app
 
-FROM build AS publish
-RUN dotnet publish "Signing.System.Tcc.MVC.csproj" -c Release -o /app
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Signing.System.Tcc.MVC.dll"]
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet Signing.System.Tcc.MVC.dll

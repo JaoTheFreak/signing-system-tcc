@@ -21,7 +21,7 @@ namespace Signing.System.Tcc.DependencyConfiguration
         {
             service.AddTransient<IEtherFactory, CoinBaseService>(p => new CoinBaseService(etherBrokerUrlApi));
 
-            service.AddScoped<ISmartContract, SmartContract>(p => new SmartContract(smartContractOptions.ProjectInfuraEndPoint, smartContractOptions.ContractAddress, smartContractOptions.AccountAddress));
+            service.AddScoped<ISmartContract, SmartContract>(p => new SmartContract(smartContractOptions.ProjectInfuraEndPoint, smartContractOptions.ContractAddress, smartContractOptions.AccountAddress, smartContractOptions.PrivateKey));
 
             service.AddScoped<DbContext, SigningContext>();
 
@@ -48,6 +48,8 @@ namespace Signing.System.Tcc.DependencyConfiguration
 
         public string AccountAddress { get; set; }
 
-        public string ProjectInfuraEndPoint { get; set; }
+        public string ProjectInfuraEndPoint { get; set; } 
+
+        public string PrivateKey { get; set; }
     }
 }

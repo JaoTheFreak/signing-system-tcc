@@ -126,9 +126,9 @@ namespace Signing.System.Tcc.MVC.Controllers
             }
             else
             {
-                var authorDocument = User.Claims.Where(c => c.Type.Equals("Document")).FirstOrDefault()?.Value;
+                var authorDocument = User.Claims.FirstOrDefault(c => c.Type.Equals("Document"))?.Value;
 
-                var userId = Convert.ToInt32(User.Claims.Where(c => c.Type.Equals(ClaimTypes.PrimarySid)).FirstOrDefault()?.Value);
+                var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.PrimarySid))?.Value);
 
                 var userFromDatabase = _userAppService.FirstOrDefault(u => u.Id == userId);
 
@@ -168,7 +168,7 @@ namespace Signing.System.Tcc.MVC.Controllers
 
                 using (var image = Image.FromStream(newDocument.Image.OpenReadStream()))
                 {    
-                    newRecord = _recordFactory.Create(transactionInfo.txHash, transactionInfo.txFee, $"0x{newDocument.ImageHash}", newDocument.DocumentDescription, newDocument.DocumentName, $"{image.PhysicalDimension.Width}x{image.PhysicalDimension.Height}", newDocument.Image.ContentType.Split('/')[1], newDocument.Image.Length, imageLink);
+                    newRecord = _recordFactory.Create(transactionInfo.txHash, transactionInfo.txFee, newDocument.ImageHash, newDocument.DocumentDescription, newDocument.DocumentName, $"{image.PhysicalDimension.Width}x{image.PhysicalDimension.Height}", newDocument.Image.ContentType.Split('/')[1], newDocument.Image.Length, imageLink);
                 }
 
                 newRecord.User = userFromDatabase;
@@ -210,7 +210,7 @@ namespace Signing.System.Tcc.MVC.Controllers
                 return BadRequest();
             }
 
-            var authorDocument = User.Claims.Where(c => c.Type.Equals("Document")).FirstOrDefault()?.Value;
+            var authorDocument = User.Claims.FirstOrDefault(c => c.Type.Equals("Document"))?.Value;
 
             var billPrice = await _smartContract.EstimateTransactionPriceAsync(authorDocument, imageHashToQuote, await etherFactory.CreateEtherAsync());
 
@@ -225,7 +225,9 @@ namespace Signing.System.Tcc.MVC.Controllers
         [HttpGet]
         public IActionResult Index([FromServices] IEtherFactory etherFactory)
         {
+            var loggedUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.PrimarySid)).Value);
 
+            var recordsFromDb = _recordAppService.Find(r => r.UserId == loggedUserId);
 
             return View();
         }

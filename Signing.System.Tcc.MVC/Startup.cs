@@ -33,9 +33,10 @@ namespace Signing.System.Tcc.MVC
             {
                 ProjectInfuraEndPoint = Environment.GetEnvironmentVariable("INFURA_PROJECT"),
                 AccountAddress = Environment.GetEnvironmentVariable("ACCOUNT_ADDRESS"),
-                ContractAddress = Environment.GetEnvironmentVariable("CONTRACT_ADDRESS")
+                ContractAddress = Environment.GetEnvironmentVariable("CONTRACT_ADDRESS"),
+                PrivateKey = Environment.GetEnvironmentVariable("WALLET_PRIVATE_KEY")
             }, Environment.GetEnvironmentVariable("COINBASE_URL_API"));
-
+            
             services.AddScoped<IAuthenticantionService, AuthService>();
             services.AddScoped<IStorageService, GoogleStorageService>(p => new GoogleStorageService(Environment.GetEnvironmentVariable("BUCKET_NAME")));
 

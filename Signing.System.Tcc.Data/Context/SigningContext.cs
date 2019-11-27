@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Signing.System.Tcc.Data.EntityConfig;
 using Signing.System.Tcc.Domain.RecordAggregate;
 using Signing.System.Tcc.Domain.UserAggregate;
@@ -19,9 +20,31 @@ namespace Signing.System.Tcc.Data.Context
         {
             var connString = Environment.GetEnvironmentVariable("CONN_STRING");
 
-            optionsBuilder.UseNpgsql(connString);
+            if (!string.IsNullOrEmpty(connString))
+            {
+                optionsBuilder.UseNpgsql(connString);
 
-            optionsBuilder.EnableSensitiveDataLogging();         
+                optionsBuilder.EnableSensitiveDataLogging();
+            }
+            else
+            {
+                var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+                var databaseUri = new Uri(databaseUrl);
+
+                var userInfo = databaseUri.UserInfo.Split(':');
+
+                var builder = new NpgsqlConnectionStringBuilder
+                {
+                    Host = databaseUri.Host,
+                    Port = databaseUri.Port,
+                    Username = userInfo[0],
+                    Password = userInfo[1],
+                    Database = databaseUri.LocalPath.TrimStart('/')
+                };
+
+                optionsBuilder.UseNpgsql(builder.ToString());
+            }                      
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

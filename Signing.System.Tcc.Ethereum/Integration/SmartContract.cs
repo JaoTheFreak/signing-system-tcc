@@ -23,15 +23,13 @@ namespace Signing.System.Tcc.Ethereum.Integration
 
         private readonly SigningSystemContractService _myContract;
 
-        public SmartContract(string projectEndPoint, string contractAddress, string userAccountAddress)
+        public SmartContract(string projectEndPoint, string contractAddress, string userAccountAddress, string privateKey)
         {
             _web3 = new Web3(projectEndPoint);
 
             _contractAddress = contractAddress;
 
-            _userAccountAddress = userAccountAddress;
-
-            var privateKey = "0xD1042D34B0D0E04E5585D84657CC3CA738E7B735794D68AF66FF2AF132164B3B";
+            _userAccountAddress = userAccountAddress;            
 
             var account = new Account(privateKey);
 
